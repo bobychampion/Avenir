@@ -54,6 +54,14 @@ export default function ParentAccess() {
           <div className="mt-2 text-sm text-slate-500">
             Dominant traits: {selected.result_json.dominant_traits.join(', ')}
           </div>
+          {selected.result_json.engagement && (
+            <div className="mt-2 text-sm text-slate-500">
+              Engagement: {selected.result_json.engagement.level}
+              {selected.result_json.engagement.answeredCount > 0
+                ? ` (${selected.result_json.engagement.disengagedCount}/${selected.result_json.engagement.answeredCount} low-effort)`
+                : ''}
+            </div>
+          )}
           <div className="mt-4 text-sm text-slate-600">{selected.result_json.explanation.summary}</div>
           <ul className="mt-3 space-y-2 text-sm text-slate-600">
             {selected.result_json.explanation.next_steps.map((item) => (

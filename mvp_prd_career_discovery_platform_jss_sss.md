@@ -147,6 +147,7 @@ The system is intentionally designed to feel like a **guided journey**, not a qu
 - Use **scenario-based**, **preference-ranking**, and **forced-choice** questions
 - Measure *how students think*, not what they claim to like
 - Use repetition of themes across sections to validate consistency
+- Include realistic **avoidant or disengaged** choices (e.g., “I stay out of it” / “I delay it”) to capture low-engagement responses
 
 ---
 
@@ -179,8 +180,8 @@ Help students discover **academic direction and learning tendencies** before sub
 
 Below are sample **everyday-life, scenario-based questions** for the JSS assessment. These questions are designed to reveal thinking patterns, interests, and natural tendencies rather than academic performance.
 
-1. **When you have free time at home, what do you enjoy doing the most?**
-   - A. Taking things apart to see how they work
+1. **When you have free time at home or in the compound, what do you enjoy doing the most?**
+   - A. Taking a small gadget or toy apart to see how it works
    - B. Drawing, designing, or creating something new
    - C. Talking with people or helping someone solve a problem
    - D. Planning activities or organizing what needs to be done
@@ -190,14 +191,15 @@ Below are sample **everyday-life, scenario-based questions** for the JSS assessm
    - B. Think of a creative or unusual solution
    - C. Explain ideas so everyone understands
    - D. Coordinate who should do what
+   - E. Stay out of it — not my business
 
-3. **At a family event, which activity sounds most enjoyable to you?**
-   - A. Helping set up equipment or gadgets
+3. **At a family event or celebration, which activity sounds most enjoyable to you?**
+   - A. Helping set up equipment or a sound system
    - B. Decorating the space or choosing how it looks
    - C. Talking with guests and making them feel welcome
    - D. Managing time or making sure plans go smoothly
 
-4. **When you are given a new game or device, what do you do first?**
+4. **When you are given a new phone app or device, what do you do first?**
    - A. Explore how it works and test it
    - B. Customize how it looks or feels
    - C. Ask others how to use it and share tips
@@ -220,6 +222,7 @@ Below are sample **everyday-life, scenario-based questions** for the JSS assessm
    - B. Creating something original
    - C. Seeing people understand or feel helped
    - D. Seeing everything run smoothly
+   - E. Doing the minimum and leaving the rest to others
 
 8. **If you could start a small project just for fun, what would it most likely be?**
    - A. Building or fixing something
@@ -251,7 +254,7 @@ Below are sample **everyday-life, scenario-based questions** for the SSS assessm
    - C. Working closely with people
    - D. Working in a structured and organized setting
 
-4. **When starting a long-term project, what motivates you most?**
+4. **When starting a long-term project or exam prep, what motivates you most?**
    - A. Solving a difficult problem
    - B. Creating something original or meaningful
    - C. Making a positive difference in people’s lives
@@ -274,6 +277,7 @@ Below are sample **everyday-life, scenario-based questions** for the SSS assessm
    - B. Idea generator or creative contributor
    - C. Communicator or team supporter
    - D. Planner or coordinator
+   - E. Stay quiet and let others handle it
 
 8. **Thinking about your future, what matters most to you in a career?**
    - A. Working on challenging problems
@@ -887,4 +891,3 @@ Admins can:
 ---
 
 **Status:** MVP PRD – Ready for Design & Development
-

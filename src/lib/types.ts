@@ -54,6 +54,7 @@ export interface Option {
   image_url?: string | null;
   score_map: Partial<Record<TraitId, number>>;
   next_question_id?: string | null;
+  disengaged?: boolean;
 }
 
 export interface Trait {
@@ -144,6 +145,13 @@ export interface Explanation {
   next_steps: string[];
 }
 
+export interface EngagementSignal {
+  level: 'HIGH' | 'MEDIUM' | 'LOW';
+  disengagedCount: number;
+  answeredCount: number;
+  note: string;
+}
+
 export interface AssessmentResult {
   mode: Mode;
   track?: Track | null;
@@ -153,5 +161,6 @@ export interface AssessmentResult {
   confidence: 'HIGH' | 'MEDIUM' | 'LOW';
   trait_scores: TraitScores;
   explanation: Explanation;
+  engagement?: EngagementSignal;
   report_code: string;
 }

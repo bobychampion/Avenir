@@ -11,6 +11,8 @@ import AdminLogin from './pages/admin/Login';
 import AdminDashboard from './pages/admin/Dashboard';
 import QuestionBank from './pages/admin/QuestionBank';
 import QuestionEditor from './pages/admin/QuestionEditor';
+import TraitManager from './pages/admin/Traits';
+import ClusterManager from './pages/admin/Clusters';
 import BranchingTool from './pages/admin/Branching';
 import PublishManager from './pages/admin/Publish';
 import ImportExport from './pages/admin/ImportExport';
@@ -71,6 +73,22 @@ export default function App() {
         element={
           <RequireAdmin>
             <QuestionEditor />
+          </RequireAdmin>
+        }
+      />
+      <Route
+        path="/admin/traits"
+        element={
+          <RequireAdmin>
+            <TraitManager />
+          </RequireAdmin>
+        }
+      />
+      <Route
+        path="/admin/clusters"
+        element={
+          <RequireAdmin>
+            <ClusterManager />
           </RequireAdmin>
         }
       />

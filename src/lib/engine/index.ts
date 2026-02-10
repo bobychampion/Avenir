@@ -224,9 +224,12 @@ const scoreClusters = (
     .sort((a, b) => b.score - a.score);
 };
 
-const computeConfidence = (scores: ClusterScore[]) => {
+const computeConfidence = (scores: ClusterScore[], traitScores: TraitScores) => {
   if (scores.length < 2) return 'LOW' as const;
+  const totalSignal = traitIds.reduce((sum, trait) => sum + Math.abs(traitScores[trait]), 0);
+  if (totalSignal < 4) return 'LOW' as const;
   const [first, second] = scores;
+  if (first.score === 0) return 'LOW' as const;
   if (second.score === 0) return 'HIGH' as const;
   const ratio = first.score / second.score;
   if (ratio >= 1.2) return 'HIGH' as const;
@@ -285,6 +288,36 @@ const createReportCode = () => {
   return base;
 };
 
+const computeEngagement = (
+  config: ConfigSnapshot,
+  state: EngineState
+) => {
+  let answeredCount = 0;
+  let disengagedCount = 0;
+
+  Object.values(state.answers).forEach((response) => {
+    const optionId = response.optionIds?.[0];
+    if (!optionId) return;
+    answeredCount += 1;
+    const option = config.options.find((item) => item.id === optionId);
+    if (option?.disengaged) disengagedCount += 1;
+  });
+
+  const ratio = answeredCount === 0 ? 0 : disengagedCount / answeredCount;
+  let level: 'HIGH' | 'MEDIUM' | 'LOW' = 'HIGH';
+  if (ratio >= 0.4) level = 'LOW';
+  else if (ratio >= 0.2) level = 'MEDIUM';
+
+  const note =
+    level === 'LOW'
+      ? 'Several answers suggest low engagement or avoidance. Consider retaking for clearer results.'
+      : level === 'MEDIUM'
+        ? 'A few answers suggest low engagement. Try to answer based on what you truly prefer.'
+        : 'Responses show steady engagement.';
+
+  return { level, disengagedCount, answeredCount, note };
+};
+
 export const computeResult = (
   config: ConfigSnapshot,
   state: EngineState,
@@ -294,7 +327,7 @@ export const computeResult = (
   const clusterScores = scoreClusters(config.clusters, state.scores, mode, track);
   const primary = clusterScores[0]?.clusterId || '';
   const dominant = getDominantTraits(state.scores, 3);
-  const confidence = computeConfidence(clusterScores);
+  const confidence = computeConfidence(clusterScores, state.scores);
 
   return {
     mode,
@@ -305,6 +338,7 @@ export const computeResult = (
     confidence,
     trait_scores: state.scores,
     explanation: buildExplanation(config.clusters, primary, dominant),
+    engagement: computeEngagement(config, state),
     report_code: createReportCode()
   };
 };

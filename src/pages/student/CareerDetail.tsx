@@ -137,7 +137,7 @@ export default function CareerDetail() {
         </Card>
 
         <Card>
-          <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">Next steps</div>
+          <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">Prep steps</div>
           <ul className="mt-4 space-y-3 text-sm text-slate-600">
             {details.next_steps.map((step) => (
               <li key={step} className="flex items-start gap-2">

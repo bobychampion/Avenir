@@ -133,6 +133,15 @@ export default function StudentResults() {
     });
   }, [result, config]);
 
+  const engagement = result?.engagement || {
+    level: 'MEDIUM' as const,
+    disengagedCount: 0,
+    answeredCount: 0,
+    note: 'Engagement data not available yet.'
+  };
+
+  const primaryCluster = clusters[0];
+
   if (!result || !config) {
     return (
       <AppShell>
@@ -199,7 +208,71 @@ export default function StudentResults() {
           </div>
         </section>
 
-        {/* 2. Pathways Section */}
+        {/* 2. Primary Prep Summary */}
+        {primaryCluster && (
+          <section className="grid gap-6 md:grid-cols-3">
+            <div className="rounded-3xl bg-white p-8 shadow-sm border border-slate-100">
+              <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">Key subjects</div>
+              <ul className="mt-4 space-y-2 text-sm text-slate-600">
+                {primaryCluster.subjects.map((subject) => (
+                  <li key={subject} className="flex items-start gap-2">
+                    <span className="mt-1 h-2 w-2 rounded-full bg-slate-300"></span>
+                    <span>{subject}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-3xl bg-white p-8 shadow-sm border border-slate-100">
+              <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">Core skills</div>
+              <ul className="mt-4 space-y-2 text-sm text-slate-600">
+                {primaryCluster.skills.map((skill) => (
+                  <li key={skill} className="flex items-start gap-2">
+                    <span className="mt-1 h-2 w-2 rounded-full bg-primary/60"></span>
+                    <span>{skill}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="rounded-3xl bg-white p-8 shadow-sm border border-slate-100">
+              <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">Prep steps</div>
+              <ul className="mt-4 space-y-2 text-sm text-slate-600">
+                {primaryCluster.next_steps.map((step) => (
+                  <li key={step} className="flex items-start gap-2">
+                    <span className="mt-1 h-2 w-2 rounded-full bg-secondary/70"></span>
+                    <span>{step}</span>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </section>
+        )}
+
+        {/* 3. Engagement Signal */}
+        <section className="grid gap-6 md:grid-cols-2">
+          <div className="rounded-3xl bg-white p-8 shadow-sm border border-slate-100">
+            <div className="text-xs font-bold text-slate-400 uppercase tracking-widest">Engagement & Discipline</div>
+            <div className="mt-4 flex items-center gap-3">
+              <Badge className={`!px-4 !py-2 ${engagement.level === 'HIGH' ? '!bg-green-100 !text-green-700' : engagement.level === 'MEDIUM' ? '!bg-amber-100 !text-amber-700' : '!bg-ember/10 !text-ember'}`}>
+                {engagement.level}
+              </Badge>
+              <span className="text-sm text-slate-500">
+                {engagement.answeredCount > 0
+                  ? `${engagement.disengagedCount} of ${engagement.answeredCount} low-effort responses`
+                  : 'No engagement data yet'}
+              </span>
+            </div>
+            <p className="mt-4 text-sm text-slate-600">{engagement.note}</p>
+          </div>
+          <div className="rounded-3xl bg-gradient-to-br from-slate-900 to-slate-800 p-8 text-white shadow-sm">
+            <div className="text-xs font-bold uppercase tracking-widest text-white/60">Why it matters</div>
+            <p className="mt-4 text-sm text-white/80">
+              This signal helps us understand how carefully the answers were chosen. If engagement is low,
+              the pathway results may be less accurate.
+            </p>
+          </div>
+        </section>
+
+        {/* 4. Pathways Section */}
         <section>
           <div className="flex items-center justify-between mb-8">
             <h2 className="text-3xl font-bold font-display text-dark">Recommended Pathways</h2>
@@ -318,7 +391,7 @@ export default function StudentResults() {
           </div>
         </section>
 
-        {/* 3. Footer Actions */}
+        {/* 5. Footer Actions */}
         <section className="bg-night rounded-3xl p-12 text-center text-white relative overflow-hidden">
           <div className="absolute inset-0 bg-gradient-to-r from-primary/50 to-secondary/50 opacity-20"></div>
           <div className="relative z-10 max-w-2xl mx-auto space-y-8">

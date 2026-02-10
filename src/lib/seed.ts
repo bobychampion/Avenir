@@ -20,7 +20,7 @@ const questions: Question[] = [
     id: 'JSS_Q1',
     mode: 'JSS',
     type: 'mcq',
-    prompt: 'When you have free time at home, what do you enjoy doing the most?',
+    prompt: 'When you have free time at home or in the compound, what do you enjoy doing the most?',
     tags: ['creativity', 'technical', 'organization', 'communication'],
     branch_level: 0,
     status: 'active'
@@ -29,7 +29,7 @@ const questions: Question[] = [
     id: 'JSS_Q1A',
     mode: 'JSS',
     type: 'scenario',
-    prompt: 'You have art supplies and a blank poster. What do you do first?',
+    prompt: 'You have cardboard, markers, and glue to make a poster for your class or club. What do you do first?',
     tags: ['creativity'],
     branch_level: 1,
     parent_question_id: 'JSS_Q1',
@@ -39,7 +39,7 @@ const questions: Question[] = [
     id: 'JSS_Q1B',
     mode: 'JSS',
     type: 'scenario',
-    prompt: 'Your class plans a game day. How do you help?',
+    prompt: 'Your class is planning a games day or cultural day. How do you help?',
     tags: ['leadership', 'organization'],
     branch_level: 1,
     parent_question_id: 'JSS_Q1',
@@ -49,7 +49,7 @@ const questions: Question[] = [
     id: 'JSS_Q1C',
     mode: 'JSS',
     type: 'scenario',
-    prompt: 'A friend is upset about a mistake. What do you do?',
+    prompt: 'A friend made a mistake during chores or in class and is upset. What do you do?',
     tags: ['empathy', 'communication'],
     branch_level: 1,
     parent_question_id: 'JSS_Q1',
@@ -59,7 +59,7 @@ const questions: Question[] = [
     id: 'JSS_Q1D',
     mode: 'JSS',
     type: 'scenario',
-    prompt: 'A toy stops working. What do you do first?',
+    prompt: 'A rechargeable torch or small radio stops working. What do you do first?',
     tags: ['technical', 'practical', 'curiosity'],
     branch_level: 1,
     parent_question_id: 'JSS_Q1',
@@ -87,7 +87,7 @@ const questions: Question[] = [
     id: 'JSS_Q4',
     mode: 'JSS',
     type: 'open_short',
-    prompt: 'Describe a school activity you enjoyed and why it felt good to you.',
+    prompt: 'Describe a school or community activity you enjoyed and why it felt good to you.',
     tags: ['reflection'],
     branch_level: 0,
     status: 'active'
@@ -96,7 +96,7 @@ const questions: Question[] = [
     id: 'JSS_Q5',
     mode: 'JSS',
     type: 'mcq',
-    prompt: 'You have a week-long assignment. How do you handle it?',
+    prompt: 'You have assignments for a long weekend. How do you handle it?',
     tags: ['organization', 'creativity', 'communication', 'practical'],
     branch_level: 0,
     status: 'active'
@@ -123,7 +123,7 @@ const questions: Question[] = [
     id: 'JSS_Q8',
     mode: 'JSS',
     type: 'scenario',
-    prompt: 'You discover a new app or tool. What excites you most?',
+    prompt: 'You discover a new phone app or tool. What excites you most?',
     tags: ['technical', 'curiosity', 'communication', 'creativity'],
     branch_level: 0,
     status: 'active'
@@ -132,7 +132,7 @@ const questions: Question[] = [
     id: 'SSS_Q1',
     mode: 'SSS',
     type: 'mcq',
-    prompt: 'Which school task energizes you most right now?',
+    prompt: 'Which SSS task energizes you most right now?',
     tags: ['logic', 'leadership', 'creativity', 'practical'],
     branch_level: 0,
     status: 'active'
@@ -141,7 +141,7 @@ const questions: Question[] = [
     id: 'SSS_Q1A',
     mode: 'SSS',
     type: 'scenario',
-    prompt: 'You are given a complex problem. How do you start?',
+    prompt: 'You are given a complex problem in class. How do you start?',
     tags: ['logic', 'curiosity'],
     branch_level: 1,
     parent_question_id: 'SSS_Q1',
@@ -190,7 +190,7 @@ const questions: Question[] = [
     id: 'SSS_Q3',
     mode: 'SSS',
     type: 'mcq',
-    prompt: 'When preparing for an exam or project, you usually...',
+    prompt: 'When preparing for WAEC/NECO or a major test, you usually...',
     tags: ['organization', 'curiosity', 'communication', 'practical'],
     branch_level: 0,
     status: 'active'
@@ -246,7 +246,7 @@ const questions: Question[] = [
 ];
 
 const options: Option[] = [
-  { id: 'JSS_Q1_A', question_id: 'JSS_Q1', label: 'Taking things apart to see how they work.', score_map: { technical: 2, curiosity: 1, logic: 1 }, next_question_id: 'JSS_Q1D' },
+  { id: 'JSS_Q1_A', question_id: 'JSS_Q1', label: 'Taking a small gadget or toy apart to see how it works.', score_map: { technical: 2, curiosity: 1, logic: 1 }, next_question_id: 'JSS_Q1D' },
   { id: 'JSS_Q1_B', question_id: 'JSS_Q1', label: 'Drawing, designing, or creating something new.', score_map: { creativity: 2 }, next_question_id: 'JSS_Q1A' },
   { id: 'JSS_Q1_C', question_id: 'JSS_Q1', label: 'Talking with people or helping someone solve a problem.', score_map: { empathy: 1, communication: 2 }, next_question_id: 'JSS_Q1C' },
   { id: 'JSS_Q1_D', question_id: 'JSS_Q1', label: 'Planning activities or organizing what needs to be done.', score_map: { organization: 2, leadership: 1 }, next_question_id: 'JSS_Q1B' },
@@ -262,27 +262,29 @@ const options: Option[] = [
   { id: 'JSS_Q1C_A', question_id: 'JSS_Q1C', label: 'Listen and encourage them.', score_map: { empathy: 2, communication: 1 } },
   { id: 'JSS_Q1C_B', question_id: 'JSS_Q1C', label: 'Suggest practical steps to fix it.', score_map: { practical: 1, logic: 1 } },
   { id: 'JSS_Q1C_C', question_id: 'JSS_Q1C', label: 'Help them reframe it positively.', score_map: { empathy: 1, creativity: 1 } },
+  { id: 'JSS_Q1C_D', question_id: 'JSS_Q1C', label: 'Stay out of it. I just mind my business.', score_map: {}, disengaged: true },
 
   { id: 'JSS_Q1D_A', question_id: 'JSS_Q1D', label: 'Check the parts and try to fix it.', score_map: { practical: 2, technical: 1 } },
   { id: 'JSS_Q1D_B', question_id: 'JSS_Q1D', label: 'Look up how it works.', score_map: { curiosity: 2, logic: 1 } },
-  { id: 'JSS_Q1D_C', question_id: 'JSS_Q1D', label: 'Ask someone to help and watch.', score_map: { communication: 1, curiosity: 1 } },
+  { id: 'JSS_Q1D_C', question_id: 'JSS_Q1D', label: 'Ask an older person to help and watch.', score_map: { communication: 1, curiosity: 1 } },
 
   { id: 'JSS_Q2_A', question_id: 'JSS_Q2', label: 'Solving math or logic puzzles', score_map: { logic: 1 } },
-  { id: 'JSS_Q2_B', question_id: 'JSS_Q2', label: 'Painting, drawing, or creative writing', score_map: { creativity: 1 } },
+  { id: 'JSS_Q2_B', question_id: 'JSS_Q2', label: 'Drawing, painting, or writing short stories', score_map: { creativity: 1 } },
   { id: 'JSS_Q2_C', question_id: 'JSS_Q2', label: 'Organizing your room or planning your day', score_map: { organization: 1 } },
   { id: 'JSS_Q2_D', question_id: 'JSS_Q2', label: 'Talking with friends or meeting new people', score_map: { communication: 1 } },
 
-  { id: 'JSS_Q3_A', question_id: 'JSS_Q3', label: 'Science experiment kit', score_map: { curiosity: 1, technical: 1 } },
-  { id: 'JSS_Q3_B', question_id: 'JSS_Q3', label: 'Drama club rehearsal', score_map: { creativity: 1, communication: 1 } },
-  { id: 'JSS_Q3_C', question_id: 'JSS_Q3', label: 'Volunteering at a community event', score_map: { empathy: 1, leadership: 1 } },
-  { id: 'JSS_Q3_D', question_id: 'JSS_Q3', label: 'Building a small model kit', score_map: { practical: 1, technical: 1 } },
+  { id: 'JSS_Q3_A', question_id: 'JSS_Q3', label: 'Science club practical or experiment kit', score_map: { curiosity: 1, technical: 1 } },
+  { id: 'JSS_Q3_B', question_id: 'JSS_Q3', label: 'Drama or cultural dance rehearsal', score_map: { creativity: 1, communication: 1 } },
+  { id: 'JSS_Q3_C', question_id: 'JSS_Q3', label: 'Community clean-up or volunteering event', score_map: { empathy: 1, leadership: 1 } },
+  { id: 'JSS_Q3_D', question_id: 'JSS_Q3', label: 'Building a model car or house', score_map: { practical: 1, technical: 1 } },
 
   { id: 'JSS_Q5_A', question_id: 'JSS_Q5', label: 'Make a plan and do a bit each day.', score_map: { organization: 2 } },
   { id: 'JSS_Q5_B', question_id: 'JSS_Q5', label: 'Find a creative twist to make it fun.', score_map: { creativity: 2 } },
   { id: 'JSS_Q5_C', question_id: 'JSS_Q5', label: 'Discuss with friends and work together.', score_map: { communication: 1, leadership: 1 } },
   { id: 'JSS_Q5_D', question_id: 'JSS_Q5', label: 'Work best under pressure near the deadline.', score_map: { practical: 1, organization: 0.5 } },
+  { id: 'JSS_Q5_E', question_id: 'JSS_Q5', label: 'Leave it till the last minute or avoid it if possible.', score_map: {}, disengaged: true },
 
-  { id: 'JSS_Q6_A', question_id: 'JSS_Q6', label: 'Watch or explore examples first.', score_map: { curiosity: 1, creativity: 1 } },
+  { id: 'JSS_Q6_A', question_id: 'JSS_Q6', label: 'Watch someone do it first or see a demo.', score_map: { curiosity: 1, creativity: 1 } },
   { id: 'JSS_Q6_B', question_id: 'JSS_Q6', label: 'Read step-by-step instructions.', score_map: { logic: 1, organization: 1 } },
   { id: 'JSS_Q6_C', question_id: 'JSS_Q6', label: 'Try it hands-on quickly.', score_map: { practical: 2 } },
   { id: 'JSS_Q6_D', question_id: 'JSS_Q6', label: 'Talk it through with someone.', score_map: { communication: 2 } },
@@ -291,11 +293,12 @@ const options: Option[] = [
   { id: 'JSS_Q7_B', question_id: 'JSS_Q7', label: 'Organize tasks and keep things on track.', score_map: { organization: 2 } },
   { id: 'JSS_Q7_C', question_id: 'JSS_Q7', label: 'Share creative ideas for the project.', score_map: { creativity: 2 } },
   { id: 'JSS_Q7_D', question_id: 'JSS_Q7', label: 'Make sure everyone feels included.', score_map: { empathy: 2 } },
+  { id: 'JSS_Q7_E', question_id: 'JSS_Q7', label: 'Keep quiet and let others handle it.', score_map: {}, disengaged: true },
 
   { id: 'JSS_Q8_A', question_id: 'JSS_Q8', label: 'Figuring out how the app works inside.', score_map: { technical: 2, curiosity: 1 } },
   { id: 'JSS_Q8_B', question_id: 'JSS_Q8', label: 'Sharing it with friends and teaching them.', score_map: { communication: 2 } },
   { id: 'JSS_Q8_C', question_id: 'JSS_Q8', label: 'Customizing it to look unique.', score_map: { creativity: 2 } },
-  { id: 'JSS_Q8_D', question_id: 'JSS_Q8', label: 'Using it to plan tasks efficiently.', score_map: { organization: 2 } },
+  { id: 'JSS_Q8_D', question_id: 'JSS_Q8', label: 'Using it to plan tasks or timetables.', score_map: { organization: 2 } },
 
   { id: 'SSS_Q1_A', question_id: 'SSS_Q1', label: 'Analyzing data or solving complex problems.', score_map: { logic: 2, curiosity: 1 }, next_question_id: 'SSS_Q1A' },
   { id: 'SSS_Q1_B', question_id: 'SSS_Q1', label: 'Coordinating people to hit a shared goal.', score_map: { leadership: 2, organization: 1 }, next_question_id: 'SSS_Q1B' },
@@ -327,21 +330,23 @@ const options: Option[] = [
   { id: 'SSS_Q3_B', question_id: 'SSS_Q3', label: 'Explore extra resources and ask questions.', score_map: { curiosity: 2 } },
   { id: 'SSS_Q3_C', question_id: 'SSS_Q3', label: 'Study with a group for discussion.', score_map: { communication: 2 } },
   { id: 'SSS_Q3_D', question_id: 'SSS_Q3', label: 'Jump into practice tasks right away.', score_map: { practical: 2 } },
+  { id: 'SSS_Q3_E', question_id: 'SSS_Q3', label: 'Leave it till the last minute or skip it if possible.', score_map: {}, disengaged: true },
 
   { id: 'SSS_Q5_A', question_id: 'SSS_Q5', label: 'Listen to what they need and encourage them.', score_map: { empathy: 2 } },
   { id: 'SSS_Q5_B', question_id: 'SSS_Q5', label: 'Teach them a step-by-step method.', score_map: { communication: 2, organization: 1 } },
   { id: 'SSS_Q5_C', question_id: 'SSS_Q5', label: 'Inspire them to set goals and stay focused.', score_map: { leadership: 2 } },
+  { id: 'SSS_Q5_D', question_id: 'SSS_Q5', label: 'I would rather not get involved.', score_map: {}, disengaged: true },
 
-  { id: 'SSS_SCI_Q1_A', question_id: 'SSS_SCI_Q1', label: 'Designing experiments and testing ideas.', score_map: { logic: 2, curiosity: 1 } },
-  { id: 'SSS_SCI_Q1_B', question_id: 'SSS_SCI_Q1', label: 'Understanding health or medical topics.', score_map: { empathy: 1, practical: 1 } },
-  { id: 'SSS_SCI_Q1_C', question_id: 'SSS_SCI_Q1', label: 'Building or improving technology.', score_map: { technical: 2, practical: 1 } },
+  { id: 'SSS_SCI_Q1_A', question_id: 'SSS_SCI_Q1', label: 'Doing lab practicals and testing ideas.', score_map: { logic: 2, curiosity: 1 } },
+  { id: 'SSS_SCI_Q1_B', question_id: 'SSS_SCI_Q1', label: 'Understanding health or medical topics in the community.', score_map: { empathy: 1, practical: 1 } },
+  { id: 'SSS_SCI_Q1_C', question_id: 'SSS_SCI_Q1', label: 'Building or improving a simple device.', score_map: { technical: 2, practical: 1 } },
 
-  { id: 'SSS_ART_Q1_A', question_id: 'SSS_ART_Q1', label: 'Debating or presenting ideas.', score_map: { communication: 2, leadership: 1 } },
+  { id: 'SSS_ART_Q1_A', question_id: 'SSS_ART_Q1', label: 'Debating or presenting ideas in class or club.', score_map: { communication: 2, leadership: 1 } },
   { id: 'SSS_ART_Q1_B', question_id: 'SSS_ART_Q1', label: 'Writing stories, poems, or scripts.', score_map: { creativity: 2 } },
   { id: 'SSS_ART_Q1_C', question_id: 'SSS_ART_Q1', label: 'Working on social or community causes.', score_map: { empathy: 2 } },
 
-  { id: 'SSS_COM_Q1_A', question_id: 'SSS_COM_Q1', label: 'Planning business strategies.', score_map: { leadership: 2, logic: 1 } },
-  { id: 'SSS_COM_Q1_B', question_id: 'SSS_COM_Q1', label: 'Organizing numbers or budgets.', score_map: { organization: 2, logic: 1 } },
+  { id: 'SSS_COM_Q1_A', question_id: 'SSS_COM_Q1', label: 'Planning a small business strategy.', score_map: { leadership: 2, logic: 1 } },
+  { id: 'SSS_COM_Q1_B', question_id: 'SSS_COM_Q1', label: 'Organizing numbers or budgets for a project.', score_map: { organization: 2, logic: 1 } },
   { id: 'SSS_COM_Q1_C', question_id: 'SSS_COM_Q1', label: 'Promoting ideas or products.', score_map: { communication: 2, creativity: 1 } }
 ];
 

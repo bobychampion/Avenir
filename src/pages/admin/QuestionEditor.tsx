@@ -271,6 +271,16 @@ export default function QuestionEditor() {
                         ))}
                       </Select>
                     </div>
+                    <div className="flex items-end">
+                      <label className="flex items-center gap-2 text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">
+                        <input
+                          type="checkbox"
+                          checked={option.disengaged || false}
+                          onChange={(event) => updateOption(option.id, { disengaged: event.target.checked })}
+                        />
+                        Low engagement option
+                      </label>
+                    </div>
                   </div>
 
                   <div className="mt-4">

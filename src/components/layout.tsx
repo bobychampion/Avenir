@@ -108,6 +108,8 @@ export const AdminNav = () => (
     {[
       ['Dashboard', '/admin'],
       ['Question Bank', '/admin/questions'],
+      ['Traits', '/admin/traits'],
+      ['Clusters', '/admin/clusters'],
       ['Branching', '/admin/branching'],
       ['Simulator', '/admin/simulator'],
       ['Publish', '/admin/publish'],

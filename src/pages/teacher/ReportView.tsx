@@ -32,6 +32,14 @@ export default function ReportView() {
           <div className="text-sm uppercase tracking-[0.2em] text-slate-500">Primary Cluster</div>
           <div className="mt-3 text-2xl font-semibold text-night">{result.primary_cluster}</div>
           <div className="mt-2 text-sm text-slate-500">Confidence: {result.confidence}</div>
+          {result.engagement && (
+            <div className="mt-2 text-sm text-slate-500">
+              Engagement: {result.engagement.level}
+              {result.engagement.answeredCount > 0
+                ? ` (${result.engagement.disengagedCount}/${result.engagement.answeredCount} low-effort)`
+                : ''}
+            </div>
+          )}
           <div className="mt-4 flex flex-wrap gap-2">
             {result.dominant_traits.map((trait) => (
               <Badge key={trait}>{trait}</Badge>
