@@ -45,7 +45,7 @@ export default async function handler(req, res) {
   const model = allowlist[modelKey] || defaultModel;
 
   try {
-    const hfResponse = await fetch(`https://api-inference.huggingface.co/models/${encodeURIComponent(model)}`, {
+    const hfResponse = await fetch(`https://router.huggingface.co/models/${encodeURIComponent(model)}`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
