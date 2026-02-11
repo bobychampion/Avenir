@@ -38,7 +38,18 @@ export default function QuestionEditor() {
   const [question, setQuestion] = useState<Question>(emptyQuestion());
   const [options, setOptions] = useState<Option[]>([]);
   const [allQuestions, setAllQuestions] = useState<Question[]>([]);
+  const [illustrationPrompt, setIllustrationPrompt] = useState('');
+  const [illustrationStyle, setIllustrationStyle] = useState<'3d' | 'illustrative' | 'flat'>('3d');
+  const [illustrationModel, setIllustrationModel] = useState<'flux-schnell' | 'sdxl-turbo' | 'sdxl-lightning'>('flux-schnell');
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [generateError, setGenerateError] = useState('');
   const isNew = id === 'new' || !id;
+
+  const styleGuides: Record<typeof illustrationStyle, string> = {
+    '3d': '3D illustrative art, soft lighting, clean background, friendly for teens.',
+    'illustrative': 'Digital illustration, vibrant colors, simple shapes, friendly for teens.',
+    'flat': 'Flat vector illustration, minimal shadows, clear shapes, friendly for teens.'
+  };
 
   useEffect(() => {
     db.questions.toArray().then(setAllQuestions);
@@ -50,6 +61,7 @@ export default function QuestionEditor() {
       const existing = await db.questions.get(id!);
       if (!existing) return;
       setQuestion(existing);
+      setIllustrationPrompt(existing.prompt || '');
       const optionList = await db.options.where('question_id').equals(existing.id).toArray();
       setOptions(optionList);
     };
@@ -92,6 +104,55 @@ export default function QuestionEditor() {
     const snapshot = await buildDraftSnapshot();
     await db.drafts.put({ id: 'draft_default', name: 'Default Draft', updated_at: new Date().toISOString(), draft_json: snapshot });
     navigate('/admin/questions');
+  };
+
+  const generateIllustration = async () => {
+    setGenerateError('');
+    const prompt = illustrationPrompt.trim() || question.prompt.trim();
+    if (!prompt) {
+      setGenerateError('Add a prompt or question text first.');
+      return;
+    }
+    setIsGenerating(true);
+    try {
+      const finalPrompt = `${styleGuides[illustrationStyle]} Scene: ${prompt}. School-appropriate, no text, no logos.`;
+      const toDataUrl = async (response: Response) => {
+        const contentType = response.headers.get('content-type') || '';
+        if (contentType.includes('application/json')) {
+          const data = await response.json();
+          const message = data?.error || data?.message || 'Image generation failed.';
+          throw new Error(message);
+        }
+        const blob = await response.blob();
+        return await new Promise<string>((resolve, reject) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.onerror = () => reject(reader.error);
+          reader.readAsDataURL(blob);
+        });
+      };
+
+      const proxyUrl =
+        (import.meta.env.VITE_IMAGE_PROXY_URL as string | undefined) || '/api/image-proxy';
+
+      const response = await fetch(proxyUrl, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt: finalPrompt, model: illustrationModel })
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(text || 'Hugging Face image generation failed');
+      }
+
+      const dataUrl = await toDataUrl(response);
+      setQuestion((prev) => ({ ...prev, illustration_url: dataUrl }));
+    } catch (error) {
+      setGenerateError(error instanceof Error ? error.message : 'Image generation failed');
+    } finally {
+      setIsGenerating(false);
+    }
   };
 
   return (
@@ -214,6 +275,52 @@ export default function QuestionEditor() {
                 setQuestion({ ...question, illustration_url: event.target.value || null })
               }
             />
+          </div>
+
+          <div className="mt-6 rounded-2xl border border-slate-100 bg-slate-50/70 p-4">
+            <div className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">AI Illustration</div>
+            <div className="mt-4 grid gap-4 md:grid-cols-2">
+              <div className="md:col-span-2">
+                <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Prompt</label>
+                <Textarea
+                  rows={3}
+                  value={illustrationPrompt}
+                  onChange={(event) => setIllustrationPrompt(event.target.value)}
+                  placeholder="Describe the scene you want illustrated."
+                />
+              </div>
+              <div>
+                <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Style</label>
+                <Select
+                  value={illustrationStyle}
+                  onChange={(event) => setIllustrationStyle(event.target.value as typeof illustrationStyle)}
+                >
+                  <option value="3d">3D illustrative</option>
+                  <option value="illustrative">Illustrative</option>
+                  <option value="flat">Flat vector</option>
+                </Select>
+              </div>
+              <div>
+                <label className="text-xs font-semibold uppercase tracking-[0.2em] text-slate-500">Model</label>
+                <Select
+                  value={illustrationModel}
+                  onChange={(event) => setIllustrationModel(event.target.value as typeof illustrationModel)}
+                >
+                  <option value="flux-schnell">FLUX.1 Schnell (Best)</option>
+                  <option value="sdxl-turbo">SDXL Turbo (Fast)</option>
+                  <option value="sdxl-lightning">SDXL Lightning (Fast + stable)</option>
+                </Select>
+              </div>
+              <div className="flex items-end">
+                <Button onClick={generateIllustration} disabled={isGenerating}>
+                  {isGenerating ? 'Generating...' : 'Generate Illustration'}
+                </Button>
+              </div>
+            </div>
+            {generateError && <div className="mt-3 text-sm text-ember">{generateError}</div>}
+            {question.illustration_url && (
+              <div className="mt-4 text-xs text-slate-500 break-all">Saved locally as data URL.</div>
+            )}
           </div>
 
           <div className="mt-6">
