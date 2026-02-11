@@ -10,6 +10,14 @@ export default function Simulator() {
   const [state, setState] = useState<EngineState | null>(null);
   const [question, setQuestion] = useState<Question | null>(null);
   const [response, setResponse] = useState<QuestionResponse>({ type: 'mcq', optionIds: [] });
+  const isValidImageUrl = (value?: string | null) =>
+    Boolean(
+      value &&
+      (value.startsWith('data:image') ||
+        value.startsWith('http://') ||
+        value.startsWith('https://') ||
+        value.startsWith('blob:'))
+    );
 
   useEffect(() => {
     const load = async () => {
@@ -144,11 +152,15 @@ export default function Simulator() {
                         : 'border-night/10 bg-white/80 text-night'
                     }`}
                   >
-                    {option.image_url ? (
-                      <img src={option.image_url} alt={option.label} className="h-32 w-full rounded-xl object-cover" />
+                    {isValidImageUrl(option.image_url) ? (
+                      <img
+                        src={option.image_url ?? undefined}
+                        alt={option.label}
+                        className="h-32 w-full rounded-xl object-cover"
+                      />
                     ) : (
                       <div className="flex h-32 w-full items-center justify-center rounded-xl bg-night/10 text-xs text-slate-500">
-                        Image placeholder
+                        Add a valid image URL.
                       </div>
                     )}
                     <div className="flex items-center justify-between">

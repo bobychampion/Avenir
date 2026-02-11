@@ -25,6 +25,15 @@ export default function StudentAssessment() {
   // Animation state
   const [isExiting, setIsExiting] = useState(false);
 
+  const isValidImageUrl = (value?: string | null) =>
+    Boolean(
+      value &&
+      (value.startsWith('data:image') ||
+        value.startsWith('http://') ||
+        value.startsWith('https://') ||
+        value.startsWith('blob:'))
+    );
+
   const resetResponse = (questionData: Question, optionList: Option[]) => {
     setTouched(false);
     if (questionData.type === 'drag_rank') {
@@ -238,11 +247,15 @@ export default function StudentAssessment() {
                         onClick={() => handleSelection(option.id)}
                       >
                         <div className="relative aspect-video w-full overflow-hidden rounded-2xl bg-slate-100">
-                          {option.image_url ? (
-                            <img src={option.image_url} alt={option.label} className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110" />
+                          {isValidImageUrl(option.image_url) ? (
+                            <img
+                              src={option.image_url ?? undefined}
+                              alt={option.label}
+                              className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-110"
+                            />
                           ) : (
                             <div className="flex h-full w-full items-center justify-center text-xs text-slate-400">
-                              🖼️ Image
+                              Add a valid image URL.
                             </div>
                           )}
                           {isSelected && (
@@ -354,15 +367,15 @@ export default function StudentAssessment() {
                 <div className="relative z-10 space-y-4">
                   <div className="text-xs font-bold uppercase tracking-[0.2em] text-white/70">Question Illustration</div>
                   <div className="rounded-2xl border border-white/20 bg-white/10 p-3">
-                    {question.illustration_url ? (
+                    {isValidImageUrl(question.illustration_url) ? (
                       <img
-                        src={question.illustration_url}
+                        src={question.illustration_url ?? undefined}
                         alt="Question illustration"
                         className="h-48 w-full rounded-xl object-cover"
                       />
                     ) : (
                       <div className="flex h-48 w-full items-center justify-center rounded-xl bg-white/15 text-xs text-white/70">
-                        Add an illustration URL in the question editor.
+                        Add a valid illustration URL in the question editor.
                       </div>
                     )}
                   </div>
