@@ -7,7 +7,8 @@ A local-first career discovery platform for JSS & SSS students.
 - Tailwind CSS
 - React Router
 - Zustand
-- Dexie (IndexedDB)
+- Dexie (IndexedDB local cache)
+- Supabase (reports sync, optional)
 
 ## Getting Started
 ```bash
@@ -36,8 +37,182 @@ npm run dev
 - Import a config JSON file and publish it when ready
 
 ## Notes
-- All data persists locally in IndexedDB (no backend).
-- Students are anonymous; sessions and reports are stored on this device only.
+- Config editing stays local in IndexedDB (no backend).
+- Reports are stored locally and synced to Supabase when configured.
+- Students are anonymous; sessions are stored on this device only.
+
+## Supabase (Reports Sync)
+This MVP syncs reports to Supabase so teachers/parents can access results across devices.
+
+### Environment variables
+Set these in your Vercel project (or `.env.local` for dev):
+```
+VITE_SUPABASE_URL=your_project_url
+VITE_SUPABASE_PUBLISHABLE_KEY=your_publishable_key
+```
+If you only have the legacy anon key, use:
+```
+VITE_SUPABASE_ANON_KEY=your_anon_key
+```
+
+### SQL schema (run in Supabase SQL editor)
+```sql
+create table if not exists public.reports (
+  id text primary key,
+  session_id text not null,
+  report_code text not null,
+  result_json jsonb not null,
+  created_at timestamptz not null default now()
+);
+
+create index if not exists reports_report_code_idx on public.reports (report_code);
+create index if not exists reports_created_at_idx on public.reports (created_at desc);
+
+alter table public.reports enable row level security;
+
+create policy \"reports_read_all\" on public.reports
+for select using (true);
+
+create policy \"reports_insert_all\" on public.reports
+for insert with check (true);
+
+create policy \"reports_update_all\" on public.reports
+for update using (true);
+```
+
+Notes:
+- These policies are open for MVP. Tighten them once auth is enabled.
+- Upserts require the `update` policy above.
+
+## Supabase (Config Data - Full Migration)
+To store questions, options, traits, clusters, and version snapshots in Supabase, create the tables below.
+
+### SQL schema (run in Supabase SQL editor)
+```sql
+create table if not exists public.traits (
+  id text primary key,
+  label text not null,
+  description text not null
+);
+
+create table if not exists public.clusters (
+  id text primary key,
+  label text not null,
+  description text not null,
+  track_bias text[] not null default '{}',
+  trait_weights jsonb not null default '{}'::jsonb,
+  trait_thresholds jsonb not null default '{}'::jsonb,
+  subjects text[] not null default '{}',
+  skills text[] not null default '{}',
+  what_they_do text[] not null default '{}',
+  next_steps text[] not null default '{}'
+);
+
+create table if not exists public.questions (
+  id text primary key,
+  mode text not null,
+  type text not null,
+  prompt text not null,
+  tags text[] not null default '{}',
+  branch_level int not null default 0,
+  parent_question_id text null,
+  status text not null,
+  track text null,
+  illustration_url text null
+);
+
+create table if not exists public.options (
+  id text primary key,
+  question_id text not null references public.questions(id) on delete cascade,
+  label text not null,
+  image_url text null,
+  score_map jsonb not null default '{}'::jsonb,
+  next_question_id text null,
+  disengaged boolean not null default false
+);
+
+create index if not exists options_question_id_idx on public.options (question_id);
+
+create table if not exists public.drafts (
+  id text primary key,
+  name text not null,
+  updated_at timestamptz not null default now(),
+  draft_json jsonb not null
+);
+
+create table if not exists public.config_versions (
+  id text primary key,
+  version text not null,
+  status text not null,
+  published_at timestamptz null,
+  config_json jsonb not null
+);
+
+alter table public.traits enable row level security;
+alter table public.clusters enable row level security;
+alter table public.questions enable row level security;
+alter table public.options enable row level security;
+alter table public.drafts enable row level security;
+alter table public.config_versions enable row level security;
+
+create policy "traits_read_all" on public.traits
+for select using (true);
+create policy "traits_insert_all" on public.traits
+for insert with check (true);
+create policy "traits_update_all" on public.traits
+for update using (true);
+create policy "traits_delete_all" on public.traits
+for delete using (true);
+
+create policy "clusters_read_all" on public.clusters
+for select using (true);
+create policy "clusters_insert_all" on public.clusters
+for insert with check (true);
+create policy "clusters_update_all" on public.clusters
+for update using (true);
+create policy "clusters_delete_all" on public.clusters
+for delete using (true);
+
+create policy "questions_read_all" on public.questions
+for select using (true);
+create policy "questions_insert_all" on public.questions
+for insert with check (true);
+create policy "questions_update_all" on public.questions
+for update using (true);
+create policy "questions_delete_all" on public.questions
+for delete using (true);
+
+create policy "options_read_all" on public.options
+for select using (true);
+create policy "options_insert_all" on public.options
+for insert with check (true);
+create policy "options_update_all" on public.options
+for update using (true);
+create policy "options_delete_all" on public.options
+for delete using (true);
+
+create policy "drafts_read_all" on public.drafts
+for select using (true);
+create policy "drafts_insert_all" on public.drafts
+for insert with check (true);
+create policy "drafts_update_all" on public.drafts
+for update using (true);
+create policy "drafts_delete_all" on public.drafts
+for delete using (true);
+
+create policy "config_versions_read_all" on public.config_versions
+for select using (true);
+create policy "config_versions_insert_all" on public.config_versions
+for insert with check (true);
+create policy "config_versions_update_all" on public.config_versions
+for update using (true);
+create policy "config_versions_delete_all" on public.config_versions
+for delete using (true);
+```
+
+Notes:
+- These policies are open for MVP. Tighten them once auth is enabled.
+- If you already have local data, export JSON, then re-import after Supabase tables are ready.
 
 ## AI Question Illustrations (Local Storage + Free Image Gen)
 The admin question editor can generate a free illustration and store it **locally** in IndexedDB as a data URL.

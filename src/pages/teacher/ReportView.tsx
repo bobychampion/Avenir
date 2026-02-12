@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { AppShell } from '../../components/layout';
 import { Badge, Card, SectionTitle } from '../../components/ui';
-import { db } from '../../lib/db';
+import { getReportById } from '../../lib/reportStore';
 import type { Report } from '../../lib/types';
 
 export default function ReportView() {
@@ -11,7 +11,7 @@ export default function ReportView() {
 
   useEffect(() => {
     if (!id) return;
-    db.reports.get(id).then((item) => setReport(item || null));
+    getReportById(id).then((item) => setReport(item || null));
   }, [id]);
 
   if (!report) {

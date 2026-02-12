@@ -1,17 +1,15 @@
 import { useEffect, useState } from 'react';
 import { AppShell, AdminNav } from '../../components/layout';
 import { Button, Card, Input, SectionTitle, Textarea } from '../../components/ui';
-import { db } from '../../lib/db';
 import { buildDraftSnapshot } from '../../lib/config';
+import { listTraits, saveDraftSnapshot, upsertTrait } from '../../lib/configStore';
 import type { Trait } from '../../lib/types';
-
-const now = () => new Date().toISOString();
 
 export default function TraitManager() {
   const [traits, setTraits] = useState<Trait[]>([]);
 
   const load = async () => {
-    const items = await db.traits.toArray();
+    const items = await listTraits();
     setTraits(items.sort((a, b) => a.id.localeCompare(b.id)));
   };
 
@@ -24,9 +22,9 @@ export default function TraitManager() {
   };
 
   const saveTrait = async (trait: Trait) => {
-    await db.traits.put(trait);
+    await upsertTrait(trait);
     const snapshot = await buildDraftSnapshot();
-    await db.drafts.put({ id: 'draft_default', name: 'Default Draft', updated_at: now(), draft_json: snapshot });
+    await saveDraftSnapshot(snapshot, 'Default Draft');
     await load();
   };
 

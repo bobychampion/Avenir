@@ -1,7 +1,5 @@
-import { db } from './db';
+import { ensurePublishedFromSnapshot, hasConfigData, replaceConfigData, saveDraftSnapshot } from './configStore';
 import type { Cluster, ConfigSnapshot, Option, Question, Trait } from './types';
-
-const now = () => new Date().toISOString();
 
 const traits: Trait[] = [
   { id: 'logic', label: 'Logical Reasoning', description: 'Solving problems with analysis and structure.' },
@@ -701,27 +699,11 @@ const buildSnapshot = (): ConfigSnapshot => ({
 });
 
 export const ensureSeedData = async () => {
-  const existingTraits = await db.traits.count();
-  if (existingTraits > 0) return;
-
-  await db.traits.bulkAdd(traits);
-  await db.clusters.bulkAdd(clusters);
-  await db.questions.bulkAdd(questions);
-  await db.options.bulkAdd(options);
+  const existing = await hasConfigData();
+  if (existing) return;
 
   const snapshot = buildSnapshot();
-  await db.drafts.add({
-    id: 'draft_default',
-    name: 'Default Draft',
-    updated_at: now(),
-    draft_json: snapshot
-  });
-
-  await db.config_versions.add({
-    id: 'config_v1',
-    version: 'v1',
-    status: 'published',
-    published_at: now(),
-    config_json: snapshot
-  });
+  await replaceConfigData(snapshot);
+  await saveDraftSnapshot(snapshot, 'Default Draft');
+  await ensurePublishedFromSnapshot(snapshot);
 };

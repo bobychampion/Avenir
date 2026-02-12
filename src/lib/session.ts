@@ -1,7 +1,9 @@
 import { nanoid } from 'nanoid';
 import { db } from './db';
 import { getPublishedConfig } from './config';
+import { getPublishedConfigVersion } from './configStore';
 import { answerQuestion, computeResult, startAssessment, undoLastQuestion } from './engine';
+import { saveReport } from './reportStore';
 import type { Mode, QuestionResponse, Session, Track } from './types';
 
 const now = () => new Date().toISOString();
@@ -14,7 +16,7 @@ export const createSession = async (mode: Mode, track?: Track | null) => {
     id: nanoid(),
     mode,
     track: track ?? null,
-    config_version_id: (await db.config_versions.where('status').equals('published').first())?.id || '',
+    config_version_id: (await getPublishedConfigVersion())?.id || '',
     state_json: state,
     created_at: now(),
     completed_at: null
@@ -83,7 +85,7 @@ export const completeSession = async (sessionId: string) => {
 
   const result = computeResult(config, session.state_json, session.mode, session.track ?? null);
   await db.sessions.update(sessionId, { completed_at: now() });
-  await db.reports.add({
+  await saveReport({
     id: nanoid(),
     session_id: sessionId,
     result_json: result,

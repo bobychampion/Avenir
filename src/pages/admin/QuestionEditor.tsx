@@ -3,8 +3,15 @@ import { useNavigate, useParams } from 'react-router-dom';
 import { nanoid } from 'nanoid';
 import { AppShell, AdminNav } from '../../components/layout';
 import { Button, Card, Input, SectionTitle, Select, Textarea } from '../../components/ui';
-import { db } from '../../lib/db';
 import { buildDraftSnapshot } from '../../lib/config';
+import {
+  getQuestion,
+  listOptionsByQuestion,
+  listQuestions,
+  replaceOptionsForQuestion,
+  saveDraftSnapshot,
+  upsertQuestion
+} from '../../lib/configStore';
 import type { Option, Question, QuestionType, TraitId, Track } from '../../lib/types';
 
 const traitIds: TraitId[] = [
@@ -52,17 +59,17 @@ export default function QuestionEditor() {
   };
 
   useEffect(() => {
-    db.questions.toArray().then(setAllQuestions);
+    listQuestions().then(setAllQuestions);
   }, []);
 
   useEffect(() => {
     if (isNew) return;
     const load = async () => {
-      const existing = await db.questions.get(id!);
+      const existing = await getQuestion(id!);
       if (!existing) return;
       setQuestion(existing);
       setIllustrationPrompt(existing.prompt || '');
-      const optionList = await db.options.where('question_id').equals(existing.id).toArray();
+      const optionList = await listOptionsByQuestion(existing.id);
       setOptions(optionList);
     };
     load();
@@ -96,13 +103,13 @@ export default function QuestionEditor() {
       ...question,
       tags: question.tags.filter(Boolean)
     };
-    await db.questions.put(payload);
-    await db.options.where('question_id').equals(payload.id).delete();
-    if (question.type !== 'open_short') {
-      await db.options.bulkAdd(options.map((option) => ({ ...option, question_id: payload.id })));
-    }
+    await upsertQuestion(payload);
+    const nextOptions = question.type === 'open_short'
+      ? []
+      : options.map((option) => ({ ...option, question_id: payload.id }));
+    await replaceOptionsForQuestion(payload.id, nextOptions);
     const snapshot = await buildDraftSnapshot();
-    await db.drafts.put({ id: 'draft_default', name: 'Default Draft', updated_at: new Date().toISOString(), draft_json: snapshot });
+    await saveDraftSnapshot(snapshot, 'Default Draft');
     navigate('/admin/questions');
   };
 

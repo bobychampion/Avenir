@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AppShell } from '../../components/layout';
 import { Button, Card, Input, SectionTitle } from '../../components/ui';
-import { db } from '../../lib/db';
+import { getReportByCode, listReports } from '../../lib/reportStore';
 import type { Report } from '../../lib/types';
 
 export default function ParentAccess() {
@@ -10,13 +10,15 @@ export default function ParentAccess() {
   const [selected, setSelected] = useState<Report | null>(null);
 
   useEffect(() => {
-    db.reports.toArray().then(setReports);
+    listReports().then(setReports);
   }, []);
 
-  const findReport = () => {
-    const match = reports.find(
-      (report) => report.result_json.report_code.toUpperCase() === code.trim().toUpperCase()
-    );
+  const findReport = async () => {
+    if (!code.trim()) {
+      setSelected(null);
+      return;
+    }
+    const match = await getReportByCode(code);
     setSelected(match || null);
   };
 
@@ -24,7 +26,7 @@ export default function ParentAccess() {
     <AppShell>
       <SectionTitle
         title="Parent Viewer"
-        subtitle="Enter a report code or browse reports stored on this device."
+        subtitle="Enter a report code or browse reports available locally and from Supabase."
       />
 
       <Card className="max-w-xl">

@@ -1,7 +1,7 @@
 import { useEffect, useMemo, useState } from 'react';
 import { AppShell, AdminNav } from '../../components/layout';
 import { Badge, Card, Input, LinkButton, SectionTitle, Select } from '../../components/ui';
-import { db } from '../../lib/db';
+import { listQuestions } from '../../lib/configStore';
 import type { Question, QuestionType } from '../../lib/types';
 
 export default function QuestionBank() {
@@ -11,7 +11,7 @@ export default function QuestionBank() {
   const [type, setType] = useState<'ALL' | QuestionType>('ALL');
 
   useEffect(() => {
-    db.questions.toArray().then(setQuestions);
+    listQuestions().then(setQuestions);
   }, []);
 
   const filtered = useMemo(() => {

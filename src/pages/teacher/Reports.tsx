@@ -2,19 +2,19 @@ import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AppShell } from '../../components/layout';
 import { Card, SectionTitle } from '../../components/ui';
-import { db } from '../../lib/db';
+import { listReports } from '../../lib/reportStore';
 import type { Report } from '../../lib/types';
 
 export default function TeacherReports() {
   const [reports, setReports] = useState<Report[]>([]);
 
   useEffect(() => {
-    db.reports.toArray().then((items) => setReports(items));
+    listReports().then(setReports);
   }, []);
 
   return (
     <AppShell>
-      <SectionTitle title="Teacher Reports" subtitle="Results generated on this device." />
+      <SectionTitle title="Teacher Reports" subtitle="Results available from this device and Supabase." />
       <div className="mt-6 grid gap-4">
         {reports.length === 0 ? (
           <Card>

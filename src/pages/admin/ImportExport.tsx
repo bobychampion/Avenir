@@ -2,8 +2,13 @@ import { useState } from 'react';
 import { nanoid } from 'nanoid';
 import { AppShell, AdminNav } from '../../components/layout';
 import { Button, Card, SectionTitle } from '../../components/ui';
-import { db } from '../../lib/db';
 import { validateConfigSnapshot } from '../../lib/validation';
+import {
+  addConfigVersion,
+  getPublishedConfigVersion,
+  replaceConfigData,
+  saveDraftSnapshot
+} from '../../lib/configStore';
 import type { ConfigSnapshot } from '../../lib/types';
 
 const downloadJson = (data: object, filename: string) => {
@@ -23,7 +28,7 @@ export default function ImportExport() {
   const [errors, setErrors] = useState<string[]>([]);
 
   const exportConfig = async () => {
-    const published = await db.config_versions.where('status').equals('published').first();
+    const published = await getPublishedConfigVersion();
     if (!published) {
       setMessage('No published config available.');
       return;
@@ -42,21 +47,9 @@ export default function ImportExport() {
         setErrors(validation.errors);
         return;
       }
-      await db.questions.clear();
-      await db.options.clear();
-      await db.traits.clear();
-      await db.clusters.clear();
-      await db.questions.bulkAdd(parsed.questions);
-      await db.options.bulkAdd(parsed.options);
-      await db.traits.bulkAdd(parsed.traits);
-      await db.clusters.bulkAdd(parsed.clusters);
-      await db.drafts.put({
-        id: 'draft_default',
-        name: 'Imported Draft',
-        updated_at: new Date().toISOString(),
-        draft_json: parsed
-      });
-      await db.config_versions.add({
+      await replaceConfigData(parsed);
+      await saveDraftSnapshot(parsed, 'Imported Draft');
+      await addConfigVersion({
         id: nanoid(),
         version: `import-${Date.now()}`,
         status: 'draft',

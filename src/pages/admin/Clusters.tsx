@@ -2,11 +2,9 @@ import { useEffect, useMemo, useState } from 'react';
 import { nanoid } from 'nanoid';
 import { AppShell, AdminNav } from '../../components/layout';
 import { Badge, Button, Card, Input, SectionTitle, Select, Textarea } from '../../components/ui';
-import { db } from '../../lib/db';
 import { buildDraftSnapshot } from '../../lib/config';
+import { deleteCluster, listClusters, listTraits, saveDraftSnapshot, upsertCluster } from '../../lib/configStore';
 import type { Cluster, Trait, Track } from '../../lib/types';
-
-const now = () => new Date().toISOString();
 
 const emptyCluster = (): Cluster => ({
   id: nanoid(),
@@ -36,8 +34,8 @@ export default function ClusterManager() {
 
   const load = async () => {
     const [clusterRows, traitRows] = await Promise.all([
-      db.clusters.toArray(),
-      db.traits.toArray()
+      listClusters(),
+      listTraits()
     ]);
     setClusters(clusterRows.sort((a, b) => a.label.localeCompare(b.label)));
     setTraits(traitRows.sort((a, b) => a.id.localeCompare(b.id)));
@@ -52,16 +50,16 @@ export default function ClusterManager() {
   };
 
   const saveCluster = async (cluster: Cluster) => {
-    await db.clusters.put(cluster);
+    await upsertCluster(cluster);
     const snapshot = await buildDraftSnapshot();
-    await db.drafts.put({ id: 'draft_default', name: 'Default Draft', updated_at: now(), draft_json: snapshot });
+    await saveDraftSnapshot(snapshot, 'Default Draft');
     await load();
   };
 
   const removeCluster = async (id: string) => {
-    await db.clusters.delete(id);
+    await deleteCluster(id);
     const snapshot = await buildDraftSnapshot();
-    await db.drafts.put({ id: 'draft_default', name: 'Default Draft', updated_at: now(), draft_json: snapshot });
+    await saveDraftSnapshot(snapshot, 'Default Draft');
     await load();
   };
 

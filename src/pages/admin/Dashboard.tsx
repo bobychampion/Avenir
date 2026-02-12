@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import { AppShell, AdminNav } from '../../components/layout';
 import { Badge, Card, SectionTitle, Select } from '../../components/ui';
-import { db } from '../../lib/db';
+import { countQuestions, getPublishedConfigVersion } from '../../lib/configStore';
+import { listReports } from '../../lib/reportStore';
 
 export default function AdminDashboard() {
   const [stats, setStats] = useState({ questions: 0, reports: 0, published: 'v1' });
@@ -20,14 +21,12 @@ export default function AdminDashboard() {
 
   useEffect(() => {
     const load = async () => {
-      const [questions, reports, published] = await Promise.all([
-        db.questions.count(),
-        db.reports.count(),
-        db.config_versions.where('status').equals('published').first()
+      const [questions, published, reportRows] = await Promise.all([
+        countQuestions(),
+        getPublishedConfigVersion(),
+        listReports()
       ]);
-      setStats({ questions, reports, published: published?.version || '--' });
-
-      const reportRows = await db.reports.toArray();
+      setStats({ questions, reports: reportRows.length, published: published?.version || '--' });
       const engagementReports = reportRows.filter((report) => Boolean(report.result_json.engagement));
       const aggregate = engagementReports.reduce(
         (acc, report) => {
@@ -131,7 +130,7 @@ export default function AdminDashboard() {
         <Card>
           <div className="text-sm uppercase tracking-[0.2em] text-slate-500">Reports</div>
           <div className="mt-3 text-2xl font-semibold text-night">{stats.reports}</div>
-          <p className="mt-2 text-sm text-slate-500">Results stored on this device.</p>
+          <p className="mt-2 text-sm text-slate-500">Results stored locally and synced to Supabase.</p>
         </Card>
       </div>
 

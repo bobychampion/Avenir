@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { nanoid } from 'nanoid';
 import { AppShell, AdminNav } from '../../components/layout';
 import { Badge, Button, Card, SectionTitle } from '../../components/ui';
-import { db } from '../../lib/db';
 import { buildDraftSnapshot } from '../../lib/config';
 import { validatePublishSnapshot } from '../../lib/validation';
+import { addConfigVersion, listConfigVersions, setPublishedConfigVersion } from '../../lib/configStore';
 import type { ConfigVersion } from '../../lib/types';
 
 const now = () => new Date().toISOString();
@@ -15,7 +15,7 @@ export default function PublishManager() {
   const [message, setMessage] = useState('');
 
   const load = async () => {
-    const all = await db.config_versions.toArray();
+    const all = await listConfigVersions();
     setVersions(all.sort((a, b) => b.published_at?.localeCompare(a.published_at || '') || 0));
   };
 
@@ -37,23 +37,23 @@ export default function PublishManager() {
       .filter((value) => !Number.isNaN(value))
       .sort((a, b) => b - a)[0];
     const nextVersion = `v${(latest || 0) + 1}`;
+    const versionId = nanoid();
 
-    await db.config_versions.where('status').equals('published').modify({ status: 'draft' });
-    await db.config_versions.add({
-      id: nanoid(),
+    await addConfigVersion({
+      id: versionId,
       version: nextVersion,
       status: 'published',
       published_at: now(),
       config_json: snapshot
     });
+    await setPublishedConfigVersion(versionId);
 
     setMessage('Published successfully.');
     await load();
   };
 
   const setPublished = async (id: string) => {
-    await db.config_versions.where('status').equals('published').modify({ status: 'draft' });
-    await db.config_versions.update(id, { status: 'published', published_at: now() });
+    await setPublishedConfigVersion(id);
     await load();
   };
 

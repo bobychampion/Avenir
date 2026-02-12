@@ -4,6 +4,7 @@ import { AppShell } from '../../components/layout';
 import { Badge, Button, LinkButton } from '../../components/ui';
 import { db } from '../../lib/db';
 import { getPublishedConfig } from '../../lib/config';
+import { getReportBySessionId } from '../../lib/reportStore';
 import type { AssessmentResult, ConfigSnapshot } from '../../lib/types';
 
 const RICH_CONTENT: Record<string, { bgGradient: string }> = {
@@ -97,15 +98,19 @@ export default function StudentResults() {
     // Fallback load if state is missing (e.g. refresh)
     const load = async () => {
       const session = await db.sessions.get(sessionId);
-      if (session) {
-        // Re-compute if needed or grab stored report
-        const report = await db.reports.where('session_id').equals(sessionId).first();
-        if (report) {
-          setResult(report.result_json);
-        }
-      } else {
-        navigate('/student');
+      const report = await getReportBySessionId(sessionId);
+
+      if (report) {
+        setResult(report.result_json);
+        return;
       }
+
+      if (!session) {
+        navigate('/student');
+        return;
+      }
+
+      navigate('/student');
     };
     load();
   }, [sessionId, result, navigate]);
