@@ -148,12 +148,25 @@ create table if not exists public.config_versions (
   config_json jsonb not null
 );
 
+create table if not exists public.pathway_progress (
+  id uuid primary key default gen_random_uuid(),
+  report_code text not null,
+  cluster_id text not null,
+  tasks jsonb not null default '{}'::jsonb,
+  reflection text not null default '',
+  updated_at timestamptz not null default now()
+);
+
+create unique index if not exists pathway_progress_report_cluster_idx
+  on public.pathway_progress (report_code, cluster_id);
+
 alter table public.traits enable row level security;
 alter table public.clusters enable row level security;
 alter table public.questions enable row level security;
 alter table public.options enable row level security;
 alter table public.drafts enable row level security;
 alter table public.config_versions enable row level security;
+alter table public.pathway_progress enable row level security;
 
 create policy "traits_read_all" on public.traits
 for select using (true);
@@ -207,6 +220,15 @@ for insert with check (true);
 create policy "config_versions_update_all" on public.config_versions
 for update using (true);
 create policy "config_versions_delete_all" on public.config_versions
+for delete using (true);
+
+create policy "pathway_progress_read_all" on public.pathway_progress
+for select using (true);
+create policy "pathway_progress_insert_all" on public.pathway_progress
+for insert with check (true);
+create policy "pathway_progress_update_all" on public.pathway_progress
+for update using (true);
+create policy "pathway_progress_delete_all" on public.pathway_progress
 for delete using (true);
 ```
 

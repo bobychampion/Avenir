@@ -3,14 +3,30 @@ import { NavLink, Link } from 'react-router-dom';
 import { LinkButton } from './ui';
 
 export const AppShell = ({ children }: { children: React.ReactNode }) => (
-  <div className="min-h-screen bg-light text-dark font-body selection:bg-primary selection:text-white">
-    <Navbar />
-    <div className="pt-24 pb-12 min-h-screen">
-      <div className="mx-auto max-w-7xl px-6 animate-rise">
-        {children}
-      </div>
+  <div className="min-h-screen bg-light text-dark font-body selection:bg-primary selection:text-white relative overflow-hidden">
+    {/* Global Background Shapes */}
+    <div className="fixed inset-0 z-0 pointer-events-none overflow-hidden">
+      <img
+        src="/images/bg-shape-1.png"
+        alt=""
+        className="absolute -top-[10%] -left-[10%] w-[50vw] h-[50vw] max-w-[800px] max-h-[800px] opacity-30 blur-3xl animate-float-slow"
+      />
+      <img
+        src="/images/bg-shape-2.png"
+        alt=""
+        className="absolute bottom-[10%] -right-[5%] w-[40vw] h-[40vw] max-w-[600px] max-h-[600px] opacity-20 blur-3xl animate-float-delayed"
+      />
     </div>
-    <Footer />
+
+    <div className="relative z-10">
+      <Navbar />
+      <div className="pt-24 pb-12 min-h-screen">
+        <div className="mx-auto max-w-7xl px-6 animate-rise">
+          {children}
+        </div>
+      </div>
+      <Footer />
+    </div>
   </div>
 );
 

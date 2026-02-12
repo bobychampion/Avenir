@@ -151,6 +151,9 @@ export default function CareerDetail() {
 
       <div className="mt-10 flex flex-wrap gap-3">
         <Button onClick={() => navigate(-1)} variant="outline">Back</Button>
+        <Button onClick={() => navigate(`/student/plan/${cluster.id}`)} variant="outline">
+          View dashboard
+        </Button>
         <Button onClick={() => navigate('/student/pathways')}>Browse pathways</Button>
       </div>
     </AppShell>

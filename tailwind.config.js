@@ -53,6 +53,9 @@ export default {
       },
       animation: {
         "float": "float 6s ease-in-out infinite",
+        "float-slow": "float 8s ease-in-out infinite",
+        "float-delayed": "float 7s ease-in-out infinite reverse",
+        "rise": "rise 1s ease-out forwards",
         "bounce-slow": "bounce 3s infinite",
         "pulse-glow": "pulse-glow 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
       },
@@ -60,6 +63,10 @@ export default {
         float: {
           "0%, 100%": { transform: "translateY(0)" },
           "50%": { transform: "translateY(-20px)" },
+        },
+        rise: {
+          "0%": { opacity: "0", transform: "translateY(20px)" },
+          "100%": { opacity: "1", transform: "translateY(0)" },
         },
         "pulse-glow": {
           "0%, 100%": { opacity: 1, boxShadow: "0 0 20px rgba(124, 58, 237, 0.5)" },

@@ -36,7 +36,8 @@ const tables = [
   'traits',
   'clusters',
   'drafts',
-  'config_versions'
+  'config_versions',
+  'pathway_progress'
 ];
 
 let hadError = false;

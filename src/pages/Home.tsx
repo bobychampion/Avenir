@@ -25,31 +25,45 @@ export default function Home() {
   return (
     <AppShell>
       {/* Hero Section */}
-      <div className="text-center py-20 animate-rise">
-        <div className="inline-block mb-4 px-4 py-1.5 rounded-full bg-white/50 border border-white/40 backdrop-blur-sm text-sm font-semibold text-primary shadow-sm animate-bounce-slow">
-          ✨ Your future awaits
-        </div>
-        <h1 className="text-6xl md:text-8xl font-black tracking-tight mb-6">
-          <span className="text-dark">Find your </span>
-          <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent animate-pulse-glow">
-            Spark.
-          </span>
-        </h1>
-        <p className="max-w-2xl mx-auto text-xl text-slate-600 font-medium leading-relaxed mb-10">
-          Not just another test. An adaptive journey to discover the career path that actually fits
-          <span className="italic text-primary font-bold"> your vibe</span>.
-        </p>
+      <div className="py-12 md:py-20 animate-rise relative z-10">
+        <div className="grid md:grid-cols-2 gap-12 items-center">
+          <div className="text-center md:text-left">
+            <div className="inline-block mb-4 px-4 py-1.5 rounded-full bg-white/50 border border-white/40 backdrop-blur-sm text-sm font-semibold text-primary shadow-sm animate-bounce-slow">
+              ✨ Your future awaits
+            </div>
+            <h1 className="text-6xl md:text-7xl lg:text-8xl font-black tracking-tight mb-6 leading-tight">
+              <span className="text-dark">Find your </span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-primary via-secondary to-accent animate-pulse-glow block md:inline">
+                Spark.
+              </span>
+            </h1>
+            <p className="max-w-2xl mx-auto md:mx-0 text-xl text-slate-600 font-medium leading-relaxed mb-10">
+              Not just another test. An adaptive journey to discover the career path that actually fits
+              <span className="italic text-primary font-bold"> your vibe</span>.
+            </p>
 
-        <div className="flex flex-wrap justify-center gap-4">
-          <Link to="/student" className="relative group px-8 py-4 rounded-full bg-dark text-white font-bold text-lg shadow-xl hover:shadow-2xl hover:bg-black transition-all hover:-translate-y-1 overflow-hidden">
-            <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-            <span className="relative z-10 flex items-center gap-2">
-              Start Assessment <span className="text-xl">🚀</span>
-            </span>
-          </Link>
-          <Link to="/about" className="px-8 py-4 rounded-full bg-white text-dark font-bold text-lg shadow-sm border border-slate-200 hover:bg-slate-50 transition-all hover:-translate-y-1">
-            Learn More
-          </Link>
+            <div className="flex flex-wrap justify-center md:justify-start gap-4">
+              <Link to="/student" className="relative group px-8 py-4 rounded-full bg-dark text-white font-bold text-lg shadow-xl hover:shadow-2xl hover:bg-black transition-all hover:-translate-y-1 overflow-hidden">
+                <div className="absolute inset-0 bg-gradient-to-r from-primary to-secondary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                <span className="relative z-10 flex items-center gap-2">
+                  Start Assessment <span className="text-xl">🚀</span>
+                </span>
+              </Link>
+              <Link to="/about" className="px-8 py-4 rounded-full bg-white text-dark font-bold text-lg shadow-sm border border-slate-200 hover:bg-slate-50 transition-all hover:-translate-y-1">
+                Learn More
+              </Link>
+            </div>
+          </div>
+
+          {/* Hero Illustration */}
+          <div className="relative hidden md:block">
+            <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-secondary/20 rounded-full blur-3xl transform translate-x-10 translate-y-10"></div>
+            <img
+              src="/images/hero-3d-group.png"
+              alt="Group of diverse students representing future careers in tech, medicine, and arts"
+              className="relative z-10 w-full max-w-lg mx-auto animate-float drop-shadow-2xl"
+            />
+          </div>
         </div>
       </div>
 

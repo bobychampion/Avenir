@@ -5,6 +5,7 @@ import { Badge, Button, LinkButton } from '../../components/ui';
 import { db } from '../../lib/db';
 import { getPublishedConfig } from '../../lib/config';
 import { getReportBySessionId } from '../../lib/reportStore';
+import { getClusterImage } from '../../lib/pathwayImages';
 import type { AssessmentResult, ConfigSnapshot } from '../../lib/types';
 
 const RICH_CONTENT: Record<string, { bgGradient: string }> = {
@@ -116,6 +117,13 @@ export default function StudentResults() {
   }, [sessionId, result, navigate]);
 
   useEffect(() => {
+    if (!result || typeof window === 'undefined') return;
+    if (result.report_code) {
+      window.localStorage.setItem('avenir:last_report_code', result.report_code);
+    }
+  }, [result]);
+
+  useEffect(() => {
     getPublishedConfig().then(setConfig);
   }, []);
 
@@ -146,6 +154,8 @@ export default function StudentResults() {
   };
 
   const primaryCluster = clusters[0];
+  const primaryLabel = config?.clusters.find((item) => item.id === result?.primary_cluster)?.label || result?.primary_cluster;
+  const primaryImage = getClusterImage(result?.primary_cluster);
 
   if (!result || !config) {
     return (
@@ -190,25 +200,39 @@ export default function StudentResults() {
             </div>
           </div>
 
-          <div className="w-full md:w-1/3 p-6 bg-slate-50 rounded-2xl border border-slate-100 space-y-4">
-            <h3 className="font-bold text-slate-400 text-xs uppercase tracking-widest">Match Strength</h3>
-            <div className="flex flex-col gap-6">
-              {clusters.slice(0, 3).map((cluster, i) => (
-                <div key={cluster.clusterId}>
-                  <div className="flex justify-between text-sm mb-1">
-                    <span className={`font-bold ${i === 0 ? 'text-primary' : 'text-slate-600'}`}>
-                      {cluster.label}
-                    </span>
-                    <span className="text-slate-400">{(cluster.score / 10).toFixed(1)}/10</span>
-                  </div>
-                  <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
-                    <div
-                      style={{ width: `${Math.min(100, cluster.score * 5)}%` }}
-                      className={`h-full rounded-full ${i === 0 ? 'bg-primary' : 'bg-slate-400'}`}
-                    ></div>
-                  </div>
+          <div className="w-full md:w-1/3 space-y-4">
+            {primaryImage && (
+              <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white">
+                <img
+                  src={primaryImage}
+                  alt={primaryLabel || 'Pathway illustration'}
+                  className="h-40 w-full object-cover"
+                />
+                <div className="px-4 py-3 text-xs font-bold uppercase tracking-widest text-slate-500">
+                  {primaryLabel}
                 </div>
-              ))}
+              </div>
+            )}
+            <div className="p-6 bg-slate-50 rounded-2xl border border-slate-100 space-y-4">
+              <h3 className="font-bold text-slate-400 text-xs uppercase tracking-widest">Match Strength</h3>
+              <div className="flex flex-col gap-6">
+                {clusters.slice(0, 3).map((cluster, i) => (
+                  <div key={cluster.clusterId}>
+                    <div className="flex justify-between text-sm mb-1">
+                      <span className={`font-bold ${i === 0 ? 'text-primary' : 'text-slate-600'}`}>
+                        {cluster.label}
+                      </span>
+                      <span className="text-slate-400">{(cluster.score / 10).toFixed(1)}/10</span>
+                    </div>
+                    <div className="h-2 w-full bg-slate-200 rounded-full overflow-hidden">
+                      <div
+                        style={{ width: `${Math.min(100, cluster.score * 5)}%` }}
+                        className={`h-full rounded-full ${i === 0 ? 'bg-primary' : 'bg-slate-400'}`}
+                      ></div>
+                    </div>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </section>
@@ -306,6 +330,9 @@ export default function StudentResults() {
                     <div className="flex items-center gap-3">
                       <LinkButton to={`/student/careers/${cluster.clusterId}`} variant="outline" className="!px-4 !py-2 text-xs">
                         View details
+                      </LinkButton>
+                      <LinkButton to={`/student/plan/${cluster.clusterId}?sessionId=${sessionId ?? ''}`} className="!px-4 !py-2 text-xs">
+                        View dashboard
                       </LinkButton>
                     </div>
                   </div>

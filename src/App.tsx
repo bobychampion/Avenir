@@ -6,6 +6,7 @@ import StudentAssessment from './pages/student/Assessment';
 import StudentResults from './pages/student/Results';
 import StudentPathways from './pages/student/Pathways';
 import StudentCareerDetail from './pages/student/CareerDetail';
+import StudentPathwayPlan from './pages/student/PathwayPlan';
 import AdminLogin from './pages/admin/Login';
 
 import AdminDashboard from './pages/admin/Dashboard';
@@ -42,6 +43,7 @@ export default function App() {
       <Route path="/student/results/:sessionId" element={<StudentResults />} />
       <Route path="/student/pathways" element={<StudentPathways />} />
       <Route path="/student/careers/:clusterId" element={<StudentCareerDetail />} />
+      <Route path="/student/plan/:clusterId" element={<StudentPathwayPlan />} />
 
       <Route path="/admin/login" element={<AdminLogin />} />
       <Route
