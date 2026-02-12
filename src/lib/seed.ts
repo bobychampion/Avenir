@@ -13,6 +13,22 @@ const traits: Trait[] = [
   { id: 'technical', label: 'Technical Interest', description: 'Enjoying tools, systems, and technology.' }
 ];
 
+const stockImages = {
+  classroomStudy: 'https://images.pexels.com/photos/6936022/pexels-photo-6936022.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  artClass: 'https://images.pexels.com/photos/8382386/pexels-photo-8382386.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  scienceLab: 'https://images.pexels.com/photos/8472001/pexels-photo-8472001.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  danceRehearsal: 'https://images.pexels.com/photos/6224442/pexels-photo-6224442.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  volunteerCleanup: 'https://images.pexels.com/photos/9543732/pexels-photo-9543732.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  roboticsBuild: 'https://images.pexels.com/photos/7869041/pexels-photo-7869041.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  businessTeamwork: 'https://images.pexels.com/photos/3184293/pexels-photo-3184293.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  smartphone: 'https://images.pexels.com/photos/8147478/pexels-photo-8147478.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  mathBoard: 'https://images.pexels.com/photos/6256067/pexels-photo-6256067.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  presentation: 'https://images.pexels.com/photos/5905502/pexels-photo-5905502.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  mentoring: 'https://images.pexels.com/photos/35745564/pexels-photo-35745564.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  techWorkshop: 'https://images.pexels.com/photos/33920035/pexels-photo-33920035.jpeg?auto=compress&cs=tinysrgb&w=1200',
+  graduation: 'https://images.pexels.com/photos/30350459/pexels-photo-30350459.jpeg?auto=compress&cs=tinysrgb&w=1200'
+};
+
 const questions: Question[] = [
   {
     id: 'JSS_Q1',
@@ -21,6 +37,7 @@ const questions: Question[] = [
     prompt: 'When you have free time at home or in the compound, what do you enjoy doing the most?',
     tags: ['creativity', 'technical', 'organization', 'communication'],
     branch_level: 0,
+    illustration_url: stockImages.classroomStudy,
     status: 'active'
   },
   {
@@ -31,6 +48,7 @@ const questions: Question[] = [
     tags: ['creativity'],
     branch_level: 1,
     parent_question_id: 'JSS_Q1',
+    illustration_url: stockImages.artClass,
     status: 'active'
   },
   {
@@ -41,6 +59,7 @@ const questions: Question[] = [
     tags: ['leadership', 'organization'],
     branch_level: 1,
     parent_question_id: 'JSS_Q1',
+    illustration_url: stockImages.danceRehearsal,
     status: 'active'
   },
   {
@@ -51,6 +70,7 @@ const questions: Question[] = [
     tags: ['empathy', 'communication'],
     branch_level: 1,
     parent_question_id: 'JSS_Q1',
+    illustration_url: stockImages.mentoring,
     status: 'active'
   },
   {
@@ -61,6 +81,7 @@ const questions: Question[] = [
     tags: ['technical', 'practical', 'curiosity'],
     branch_level: 1,
     parent_question_id: 'JSS_Q1',
+    illustration_url: stockImages.techWorkshop,
     status: 'active'
   },
   {
@@ -70,6 +91,7 @@ const questions: Question[] = [
     prompt: 'Rank these tasks from most enjoyable (#1) to least (#4).',
     tags: ['logic', 'creativity', 'organization', 'communication'],
     branch_level: 0,
+    illustration_url: stockImages.classroomStudy,
     status: 'active'
   },
   {
@@ -79,6 +101,7 @@ const questions: Question[] = [
     prompt: 'Which after-school activity looks most fun to you?',
     tags: ['technical', 'creativity', 'empathy', 'practical'],
     branch_level: 0,
+    illustration_url: stockImages.classroomStudy,
     status: 'active'
   },
   {
@@ -88,6 +111,7 @@ const questions: Question[] = [
     prompt: 'Describe a school or community activity you enjoyed and why it felt good to you.',
     tags: ['reflection'],
     branch_level: 0,
+    illustration_url: stockImages.volunteerCleanup,
     status: 'active'
   },
   {
@@ -97,6 +121,7 @@ const questions: Question[] = [
     prompt: 'You have assignments for a long weekend. How do you handle it?',
     tags: ['organization', 'creativity', 'communication', 'practical'],
     branch_level: 0,
+    illustration_url: stockImages.classroomStudy,
     status: 'active'
   },
   {
@@ -106,6 +131,7 @@ const questions: Question[] = [
     prompt: 'When learning something new, you prefer to...',
     tags: ['curiosity', 'logic', 'practical', 'communication'],
     branch_level: 0,
+    illustration_url: stockImages.classroomStudy,
     status: 'active'
   },
   {
@@ -115,6 +141,7 @@ const questions: Question[] = [
     prompt: 'A group project needs a leader. What do you do?',
     tags: ['leadership', 'organization', 'creativity', 'empathy'],
     branch_level: 0,
+    illustration_url: stockImages.businessTeamwork,
     status: 'active'
   },
   {
@@ -124,6 +151,7 @@ const questions: Question[] = [
     prompt: 'You discover a new phone app or tool. What excites you most?',
     tags: ['technical', 'curiosity', 'communication', 'creativity'],
     branch_level: 0,
+    illustration_url: stockImages.smartphone,
     status: 'active'
   },
   {
@@ -133,6 +161,7 @@ const questions: Question[] = [
     prompt: 'Which SSS task energizes you most right now?',
     tags: ['logic', 'leadership', 'creativity', 'practical'],
     branch_level: 0,
+    illustration_url: stockImages.classroomStudy,
     status: 'active'
   },
   {
@@ -143,6 +172,7 @@ const questions: Question[] = [
     tags: ['logic', 'curiosity'],
     branch_level: 1,
     parent_question_id: 'SSS_Q1',
+    illustration_url: stockImages.mathBoard,
     status: 'active'
   },
   {
@@ -153,6 +183,7 @@ const questions: Question[] = [
     tags: ['leadership', 'organization'],
     branch_level: 1,
     parent_question_id: 'SSS_Q1',
+    illustration_url: stockImages.businessTeamwork,
     status: 'active'
   },
   {
@@ -163,6 +194,7 @@ const questions: Question[] = [
     tags: ['communication', 'creativity'],
     branch_level: 1,
     parent_question_id: 'SSS_Q1',
+    illustration_url: stockImages.presentation,
     status: 'active'
   },
   {
@@ -173,6 +205,7 @@ const questions: Question[] = [
     tags: ['practical', 'technical'],
     branch_level: 1,
     parent_question_id: 'SSS_Q1',
+    illustration_url: stockImages.roboticsBuild,
     status: 'active'
   },
   {
@@ -182,6 +215,7 @@ const questions: Question[] = [
     prompt: 'Rank the areas you feel most confident in right now.',
     tags: ['logic', 'communication', 'technical', 'organization'],
     branch_level: 0,
+    illustration_url: stockImages.classroomStudy,
     status: 'active'
   },
   {
@@ -191,6 +225,7 @@ const questions: Question[] = [
     prompt: 'When preparing for WAEC/NECO or a major test, you usually...',
     tags: ['organization', 'curiosity', 'communication', 'practical'],
     branch_level: 0,
+    illustration_url: stockImages.classroomStudy,
     status: 'active'
   },
   {
@@ -200,6 +235,7 @@ const questions: Question[] = [
     prompt: 'What kind of future work sounds exciting to you and why?',
     tags: ['reflection'],
     branch_level: 0,
+    illustration_url: stockImages.graduation,
     status: 'active'
   },
   {
@@ -209,6 +245,7 @@ const questions: Question[] = [
     prompt: 'You are mentoring a younger student. How do you help them most?',
     tags: ['empathy', 'communication', 'leadership'],
     branch_level: 0,
+    illustration_url: stockImages.mentoring,
     status: 'active'
   },
   {
@@ -219,7 +256,8 @@ const questions: Question[] = [
     tags: ['logic', 'curiosity', 'technical'],
     branch_level: 0,
     status: 'active',
-    track: 'SCIENCE'
+    track: 'SCIENCE',
+    illustration_url: stockImages.scienceLab
   },
   {
     id: 'SSS_ART_Q1',
@@ -229,7 +267,8 @@ const questions: Question[] = [
     tags: ['communication', 'creativity', 'empathy'],
     branch_level: 0,
     status: 'active',
-    track: 'ARTS'
+    track: 'ARTS',
+    illustration_url: stockImages.artClass
   },
   {
     id: 'SSS_COM_Q1',
@@ -239,7 +278,8 @@ const questions: Question[] = [
     tags: ['leadership', 'organization', 'logic'],
     branch_level: 0,
     status: 'active',
-    track: 'COMMERCIAL'
+    track: 'COMMERCIAL',
+    illustration_url: stockImages.businessTeamwork
   }
 ];
 
@@ -271,10 +311,10 @@ const options: Option[] = [
   { id: 'JSS_Q2_C', question_id: 'JSS_Q2', label: 'Organizing your room or planning your day', score_map: { organization: 1 } },
   { id: 'JSS_Q2_D', question_id: 'JSS_Q2', label: 'Talking with friends or meeting new people', score_map: { communication: 1 } },
 
-  { id: 'JSS_Q3_A', question_id: 'JSS_Q3', label: 'Science club practical or experiment kit', score_map: { curiosity: 1, technical: 1 } },
-  { id: 'JSS_Q3_B', question_id: 'JSS_Q3', label: 'Drama or cultural dance rehearsal', score_map: { creativity: 1, communication: 1 } },
-  { id: 'JSS_Q3_C', question_id: 'JSS_Q3', label: 'Community clean-up or volunteering event', score_map: { empathy: 1, leadership: 1 } },
-  { id: 'JSS_Q3_D', question_id: 'JSS_Q3', label: 'Building a model car or house', score_map: { practical: 1, technical: 1 } },
+  { id: 'JSS_Q3_A', question_id: 'JSS_Q3', label: 'Science club practical or experiment kit', score_map: { curiosity: 1, technical: 1 }, image_url: stockImages.scienceLab },
+  { id: 'JSS_Q3_B', question_id: 'JSS_Q3', label: 'Drama or cultural dance rehearsal', score_map: { creativity: 1, communication: 1 }, image_url: stockImages.danceRehearsal },
+  { id: 'JSS_Q3_C', question_id: 'JSS_Q3', label: 'Community clean-up or volunteering event', score_map: { empathy: 1, leadership: 1 }, image_url: stockImages.volunteerCleanup },
+  { id: 'JSS_Q3_D', question_id: 'JSS_Q3', label: 'Building a model car or house', score_map: { practical: 1, technical: 1 }, image_url: stockImages.roboticsBuild },
 
   { id: 'JSS_Q5_A', question_id: 'JSS_Q5', label: 'Make a plan and do a bit each day.', score_map: { organization: 2 } },
   { id: 'JSS_Q5_B', question_id: 'JSS_Q5', label: 'Find a creative twist to make it fun.', score_map: { creativity: 2 } },
