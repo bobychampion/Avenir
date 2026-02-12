@@ -99,24 +99,26 @@ export default function StudentDashboard() {
                 <div className="flex flex-col gap-6">
                     {/* Chosen Pathway */}
                     <BentoItem className="bg-gradient-to-br from-slate-50 to-white border border-slate-200 shadow-sm flex-1 flex flex-col justify-between">
-                        <div>
-                            <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Your pathway</div>
-                            <div className="mt-4 text-2xl font-bold text-dark font-display">
-                                {chosenCluster ? chosenCluster.label : 'Complete assessment to unlock'}
+                        <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                            <div className="sm:pr-4">
+                                <div className="text-xs font-bold uppercase tracking-wider text-slate-400">Your pathway</div>
+                                <div className="mt-4 text-2xl font-bold text-dark font-display">
+                                    {chosenCluster ? chosenCluster.label : 'Complete assessment to unlock'}
+                                </div>
+                                <p className="text-sm text-slate-500 mt-2">
+                                    {chosenCluster
+                                        ? 'Your results are ready. Continue with your personalized action plan.'
+                                        : 'Take the assessment to see your recommended career direction.'}
+                                </p>
                             </div>
-                            <p className="text-sm text-slate-500 mt-2">
-                                {chosenCluster
-                                    ? 'Your results are ready. Continue with your personalized action plan.'
-                                    : 'Take the assessment to see your recommended career direction.'}
-                            </p>
+                            {chosenCluster?.image && (
+                                <img
+                                    src={chosenCluster.image}
+                                    alt={chosenCluster.label}
+                                    className="mt-5 h-40 w-full rounded-3xl border border-slate-200 object-cover shadow-md"
+                                />
+                            )}
                         </div>
-                        {chosenCluster?.image && (
-                            <img
-                                src={chosenCluster.image}
-                                alt={chosenCluster.label}
-                                className="mt-5 h-32 w-full rounded-2xl object-cover"
-                            />
-                        )}
                         <div className="mt-6 flex flex-wrap gap-3">
                             {chosenCluster ? (
                                 <LinkButton

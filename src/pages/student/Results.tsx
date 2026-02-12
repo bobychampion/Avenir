@@ -202,14 +202,22 @@ export default function StudentResults() {
 
           <div className="w-full md:w-1/3 space-y-4">
             {primaryImage && (
-              <div className="overflow-hidden rounded-2xl border border-slate-100 bg-white">
-                <img
-                  src={primaryImage}
-                  alt={primaryLabel || 'Pathway illustration'}
-                  className="h-40 w-full object-cover"
-                />
-                <div className="px-4 py-3 text-xs font-bold uppercase tracking-widest text-slate-500">
-                  {primaryLabel}
+              <div className="overflow-hidden rounded-3xl border border-slate-200 bg-white shadow-lg">
+                <div className="relative">
+                  <img
+                    src={primaryImage}
+                    alt={primaryLabel || 'Pathway illustration'}
+                    className="h-56 w-full object-cover"
+                  />
+                  <div className="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/60 to-transparent p-4">
+                    <div className="text-[10px] font-bold uppercase tracking-widest text-white/80">Your pathway</div>
+                    <div className="text-lg font-bold text-white">
+                      {primaryLabel || 'Top pathway'}
+                    </div>
+                  </div>
+                </div>
+                <div className="px-4 py-3 text-sm text-slate-500">
+                  Top match from your assessment.
                 </div>
               </div>
             )}

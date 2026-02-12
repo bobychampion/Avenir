@@ -212,23 +212,25 @@ export default function PathwayPlan() {
             <img
               src={clusterImage}
               alt={cluster.label}
-              className="h-44 w-full rounded-2xl object-cover"
+              className="h-56 w-full rounded-3xl border border-slate-200 object-cover shadow-md"
             />
           )}
-          <div className="flex flex-wrap items-center gap-3">
-            <Badge>{modeLabel}</Badge>
-            {cluster.track_bias.length > 0 && (
-              <div className="flex flex-wrap gap-2">
-                {cluster.track_bias.map((track) => (
-                  <Badge key={track} className="!bg-secondary/10 !text-secondary">{track}</Badge>
-                ))}
-              </div>
-            )}
-          </div>
+          <div className="flex-1 space-y-4">
+            <div className="flex flex-wrap items-center gap-3">
+              <Badge>{modeLabel}</Badge>
+              {cluster.track_bias.length > 0 && (
+                <div className="flex flex-wrap gap-2">
+                  {cluster.track_bias.map((track) => (
+                    <Badge key={track} className="!bg-secondary/10 !text-secondary">{track}</Badge>
+                  ))}
+                </div>
+              )}
+            </div>
 
-          <div>
-            <div className="text-xs font-bold uppercase tracking-widest text-slate-400">Summary</div>
-            <p className="mt-3 text-sm text-slate-600">{plan.summary}</p>
+            <div>
+              <div className="text-xs font-bold uppercase tracking-widest text-slate-400">Summary</div>
+              <p className="mt-3 text-sm text-slate-600">{plan.summary}</p>
+            </div>
           </div>
 
           <div className="grid gap-4 md:grid-cols-2">
