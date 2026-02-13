@@ -39,7 +39,7 @@ npm run dev
 ## Notes
 - Config editing stays local in IndexedDB (no backend).
 - Reports are stored locally and synced to Supabase when configured.
-- Students are anonymous; sessions are stored on this device only.
+- Students sign in with Supabase Auth and have unique profiles stored in Supabase.
 
 ## Supabase (Reports Sync)
 This MVP syncs reports to Supabase so teachers/parents can access results across devices.
@@ -60,12 +60,14 @@ VITE_SUPABASE_ANON_KEY=your_anon_key
 create table if not exists public.reports (
   id text primary key,
   session_id text not null,
+  student_id uuid null,
   report_code text not null,
   result_json jsonb not null,
   created_at timestamptz not null default now()
 );
 
 create index if not exists reports_report_code_idx on public.reports (report_code);
+create index if not exists reports_student_id_idx on public.reports (student_id);
 create index if not exists reports_created_at_idx on public.reports (created_at desc);
 
 alter table public.reports enable row level security;
@@ -83,6 +85,67 @@ for update using (true);
 Notes:
 - These policies are open for MVP. Tighten them once auth is enabled.
 - Upserts require the `update` policy above.
+- If you already created `reports`, run: `alter table public.reports add column if not exists student_id uuid null;`
+
+## Supabase (Student Profiles)
+Student accounts and profiles are stored in Supabase. Create the tables below so each student has a unique profile.
+
+### SQL schema (run in Supabase SQL editor)
+```sql
+create table if not exists public.schools (
+  id uuid primary key default gen_random_uuid(),
+  name text not null,
+  city text null,
+  state text null,
+  country text null,
+  created_at timestamptz not null default now()
+);
+
+create unique index if not exists schools_name_idx on public.schools (lower(name));
+
+create table if not exists public.student_profiles (
+  id uuid primary key references auth.users(id) on delete cascade,
+  first_name text not null,
+  last_name text null,
+  email text null,
+  phone text null,
+  avatar_url text null,
+  school_id uuid null references public.schools(id),
+  school_name text null,
+  location text null,
+  age int null,
+  class_level text null,
+  favorite_color text null,
+  favorite_food text null,
+  hobbies text[] not null default '{}',
+  interests text[] not null default '{}',
+  guardian_name text null,
+  guardian_email text null,
+  guardian_phone text null,
+  guardian_relationship text null,
+  guardian_permission boolean not null default false,
+  created_at timestamptz not null default now(),
+  updated_at timestamptz not null default now()
+);
+
+alter table public.student_profiles enable row level security;
+alter table public.schools enable row level security;
+
+create policy \"profiles_select_own\" on public.student_profiles
+for select using (auth.uid() = id);
+
+create policy \"profiles_insert_own\" on public.student_profiles
+for insert with check (auth.uid() = id);
+
+create policy \"profiles_update_own\" on public.student_profiles
+for update using (auth.uid() = id);
+
+create policy \"schools_read_all\" on public.schools
+for select using (true);
+
+create policy \"schools_insert_all\" on public.schools
+for insert with check (true);
+```
 
 ## Supabase (Config Data - Full Migration)
 To store questions, options, traits, clusters, and version snapshots in Supabase, create the tables below.

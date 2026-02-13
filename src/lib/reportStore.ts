@@ -5,6 +5,7 @@ import type { Report } from './types';
 const mapRow = (row: any): Report => ({
   id: row.id,
   session_id: row.session_id,
+  student_id: row.student_id ?? null,
   result_json: row.result_json,
   created_at: row.created_at
 });
@@ -20,22 +21,29 @@ const mergeReports = (remote: Report[], local: Report[]) => {
   return merged.sort((a, b) => b.created_at.localeCompare(a.created_at));
 };
 
-export const listReports = async (): Promise<Report[]> => {
+export const listReports = async (studentId?: string | null): Promise<Report[]> => {
   const local = await db.reports.toArray();
-  if (!isSupabaseEnabled || !supabase) return local;
+  const localFiltered = studentId ? local.filter((report) => report.student_id === studentId) : local;
+  if (!isSupabaseEnabled || !supabase) return localFiltered;
 
-  const { data, error } = await supabase
+  let query = supabase
     .from('reports')
     .select('*')
     .order('created_at', { ascending: false });
 
+  if (studentId) {
+    query = query.eq('student_id', studentId);
+  }
+
+  const { data, error } = await query;
+
   if (error || !data) {
     console.warn('Supabase reports fetch failed', error);
-    return local;
+    return localFiltered;
   }
 
   const remote = data.map(mapRow);
-  return mergeReports(remote, local);
+  return mergeReports(remote, localFiltered);
 };
 
 export const getReportById = async (id: string): Promise<Report | null> => {
@@ -108,6 +116,7 @@ export const saveReport = async (report: Report) => {
   const payload = {
     id: report.id,
     session_id: report.session_id,
+    student_id: report.student_id ?? null,
     report_code: report.result_json.report_code,
     result_json: report.result_json,
     created_at: report.created_at

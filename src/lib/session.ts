@@ -75,7 +75,7 @@ export const undoSessionAnswer = async (sessionId: string) => {
   return nextState;
 };
 
-export const completeSession = async (sessionId: string) => {
+export const completeSession = async (sessionId: string, studentId?: string | null) => {
   const session = await db.sessions.get(sessionId);
   if (!session) throw new Error('Session not found');
   const existing = await db.reports.where('session_id').equals(sessionId).first();
@@ -88,6 +88,7 @@ export const completeSession = async (sessionId: string) => {
   await saveReport({
     id: nanoid(),
     session_id: sessionId,
+    student_id: studentId ?? null,
     result_json: result,
     created_at: now()
   });

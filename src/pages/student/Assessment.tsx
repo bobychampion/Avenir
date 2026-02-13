@@ -5,6 +5,7 @@ import { Badge, Button, Card, SectionTitle, Textarea } from '../../components/ui
 import { db } from '../../lib/db';
 import { answerSessionQuestion, completeSession } from '../../lib/session';
 import { getPublishedConfig } from '../../lib/config';
+import { getCurrentStudent } from '../../lib/studentAuth';
 import { useSessionStore } from '../../store/session';
 import type { ConfigSnapshot, Option, Question, QuestionResponse } from '../../lib/types';
 
@@ -21,6 +22,7 @@ export default function StudentAssessment() {
   const [loading, setLoading] = useState(true);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [touched, setTouched] = useState(false);
+  const [studentId, setStudentId] = useState<string | null>(null);
 
   // Animation state
   const [isExiting, setIsExiting] = useState(false);
@@ -67,7 +69,7 @@ export default function StudentAssessment() {
       const currentId = session.state_json.currentQuestionId;
       const questionData = published.questions.find((item) => item.id === currentId) || null;
       if (!questionData) {
-        const result = await completeSession(sessionId);
+        const result = await completeSession(sessionId, studentId);
         navigate(`/student/results/${sessionId}`, { state: result });
         return;
       }
@@ -88,6 +90,10 @@ export default function StudentAssessment() {
     loadSession();
   }, [sessionId, navigate]);
 
+  useEffect(() => {
+    getCurrentStudent().then((user) => setStudentId(user?.id ?? null));
+  }, []);
+
   const handleSubmit = async (explicitResponse?: QuestionResponse) => {
     if (!sessionId || !question || isSubmitting) return;
 
@@ -104,7 +110,7 @@ export default function StudentAssessment() {
       const nextState = await answerSessionQuestion(sessionId, question.id, payload);
 
       if (!nextState.currentQuestionId) {
-        const result = await completeSession(sessionId);
+        const result = await completeSession(sessionId, studentId);
         navigate(`/student/results/${sessionId}`, { state: result });
         return;
       }

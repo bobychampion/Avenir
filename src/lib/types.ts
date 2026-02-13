@@ -97,6 +97,7 @@ export interface Answer {
 export interface Report {
   id: string;
   session_id: string;
+  student_id?: string | null;
   result_json: AssessmentResult;
   created_at: string;
 }

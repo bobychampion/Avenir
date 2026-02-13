@@ -1,10 +1,12 @@
 import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AppShell } from '../../components/layout';
-import { LinkButton } from '../../components/ui';
+import { Card, LinkButton } from '../../components/ui';
 import { getPublishedConfig } from '../../lib/config';
 import { listReports } from '../../lib/reportStore';
 import { getClusterImage } from '../../lib/pathwayImages';
+import { getCurrentStudent } from '../../lib/studentAuth';
+import { getStudentProfile, isProfileComplete, type StudentProfile } from '../../lib/studentProfile';
 import type { ConfigSnapshot, Report } from '../../lib/types';
 
 const BentoItem = ({ className, children, title, subtitle }: { className?: string, children?: React.ReactNode, title?: string, subtitle?: string }) => (
@@ -19,16 +21,28 @@ export default function StudentDashboard() {
     const timeOfDay = new Date().getHours() < 12 ? 'Good morning' : new Date().getHours() < 18 ? 'Good afternoon' : 'Good evening';
     const [config, setConfig] = useState<ConfigSnapshot | null>(null);
     const [latestReport, setLatestReport] = useState<Report | null>(null);
+    const [profile, setProfile] = useState<StudentProfile | null>(null);
 
     useEffect(() => {
         getPublishedConfig().then(setConfig);
-        listReports().then((items) => {
-            const report = items[0] || null;
+        const load = async () => {
+            const user = await getCurrentStudent();
+            if (!user) {
+                setLatestReport(null);
+                return;
+            }
+            const [profileData, reports] = await Promise.all([
+                getStudentProfile(user.id),
+                listReports(user.id)
+            ]);
+            setProfile(profileData);
+            const report = reports[0] || null;
             setLatestReport(report);
             if (report?.result_json?.report_code && typeof window !== 'undefined') {
                 window.localStorage.setItem('avenir:last_report_code', report.result_json.report_code);
             }
-        });
+        };
+        load();
     }, []);
 
     const chosenCluster = useMemo(() => {
@@ -43,14 +57,46 @@ export default function StudentDashboard() {
         };
     }, [latestReport, config]);
 
+    const displayName = profile?.first_name || 'Future Star';
+    const avatarUrl = profile?.avatar_url || null;
+    const profileComplete = isProfileComplete(profile);
+
     return (
         <AppShell>
             <div className="mb-12 animate-rise">
-                <h1 className="text-5xl font-black font-display text-dark tracking-tight">
-                    {timeOfDay}, <span className="text-primary">Future Star!</span> 🚀
-                </h1>
-                <p className="text-slate-500 text-lg mt-3 font-medium">Ready to discover where your potential leads?</p>
+                <div className="flex flex-wrap items-center gap-4">
+                    {avatarUrl ? (
+                        <img
+                            src={avatarUrl}
+                            alt={displayName}
+                            className="h-16 w-16 rounded-2xl object-cover border border-white shadow-soft"
+                        />
+                    ) : (
+                        <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center text-primary font-bold">
+                            {displayName.charAt(0) || 'S'}
+                        </div>
+                    )}
+                    <div>
+                        <h1 className="text-4xl md:text-5xl font-black font-display text-dark tracking-tight">
+                            {timeOfDay}, <span className="text-primary">{displayName}!</span>
+                        </h1>
+                        <p className="text-slate-500 text-lg mt-2 font-medium">Ready to discover where your potential leads?</p>
+                    </div>
+                </div>
             </div>
+
+            {!profileComplete && (
+                <Card className="mb-8 flex flex-wrap items-center justify-between gap-4">
+                    <div>
+                        <div className="text-xs font-bold uppercase tracking-widest text-slate-400">Profile needed</div>
+                        <div className="text-xl font-bold text-dark">Complete your profile to personalize your journey.</div>
+                        <p className="text-sm text-slate-500 mt-1">Add your school and basic details before taking assessments.</p>
+                    </div>
+                    <LinkButton to="/student/profile" className="!px-5 !py-3">
+                        Complete profile
+                    </LinkButton>
+                </Card>
+            )}
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 animate-rise" style={{ animationDelay: '0.1s' }}>
 

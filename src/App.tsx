@@ -1,12 +1,14 @@
 import { Navigate, Route, Routes } from 'react-router-dom';
 import Home from './pages/Home';
 import StudentDashboard from './pages/student/Dashboard';
+import StudentAuth from './pages/student/Auth';
 import StudentOnboarding from './pages/student/Onboarding';
 import StudentAssessment from './pages/student/Assessment';
 import StudentResults from './pages/student/Results';
 import StudentPathways from './pages/student/Pathways';
 import StudentCareerDetail from './pages/student/CareerDetail';
 import StudentPathwayPlan from './pages/student/PathwayPlan';
+import StudentProfile from './pages/student/Profile';
 import AdminLogin from './pages/admin/Login';
 
 import AdminDashboard from './pages/admin/Dashboard';
@@ -22,6 +24,7 @@ import TeacherReports from './pages/teacher/Reports';
 import ReportView from './pages/teacher/ReportView';
 import ParentAccess from './pages/parent/ParentAccess';
 import CounselorReports from './pages/counselor/Reports';
+import StudentGuard from './components/StudentGuard';
 import { useAuthStore } from './store/auth';
 
 const RequireAdmin = ({ children }: { children: React.ReactNode }) => {
@@ -37,13 +40,15 @@ export default function App() {
     <Routes>
       <Route path="/" element={<Home />} />
 
-      <Route path="/student" element={<StudentDashboard />} />
-      <Route path="/student/onboarding" element={<StudentOnboarding />} />
-      <Route path="/student/assessment" element={<StudentAssessment />} />
-      <Route path="/student/results/:sessionId" element={<StudentResults />} />
-      <Route path="/student/pathways" element={<StudentPathways />} />
-      <Route path="/student/careers/:clusterId" element={<StudentCareerDetail />} />
-      <Route path="/student/plan/:clusterId" element={<StudentPathwayPlan />} />
+      <Route path="/student/login" element={<StudentAuth />} />
+      <Route path="/student/profile" element={<StudentGuard><StudentProfile /></StudentGuard>} />
+      <Route path="/student" element={<StudentGuard><StudentDashboard /></StudentGuard>} />
+      <Route path="/student/onboarding" element={<StudentGuard requireProfile><StudentOnboarding /></StudentGuard>} />
+      <Route path="/student/assessment" element={<StudentGuard requireProfile><StudentAssessment /></StudentGuard>} />
+      <Route path="/student/results/:sessionId" element={<StudentGuard requireProfile><StudentResults /></StudentGuard>} />
+      <Route path="/student/pathways" element={<StudentGuard><StudentPathways /></StudentGuard>} />
+      <Route path="/student/careers/:clusterId" element={<StudentGuard><StudentCareerDetail /></StudentGuard>} />
+      <Route path="/student/plan/:clusterId" element={<StudentGuard requireProfile><StudentPathwayPlan /></StudentGuard>} />
 
       <Route path="/admin/login" element={<AdminLogin />} />
       <Route

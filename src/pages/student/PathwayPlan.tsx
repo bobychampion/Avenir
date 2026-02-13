@@ -149,6 +149,14 @@ export default function PathwayPlan() {
     return buildPathwayPlan(cluster);
   }, [cluster]);
 
+  const pathwayFact = useMemo(() => {
+    if (!plan) return '';
+    const subjectCount = plan.subjects.length;
+    const skillCount = plan.skills.length;
+    const taskCount = plan.tasks.length;
+    return `This pathway highlights ${subjectCount} focus ${subjectCount === 1 ? 'subject' : 'subjects'} and ${skillCount} key ${skillCount === 1 ? 'skill' : 'skills'}, with ${taskCount} action ${taskCount === 1 ? 'task' : 'tasks'} to guide your progress.`;
+  }, [plan]);
+
   if (!config) {
     return (
       <AppShell>
@@ -208,13 +216,6 @@ export default function PathwayPlan() {
 
       <div className="grid gap-6 lg:grid-cols-[2fr,1fr]">
         <Card className="space-y-6">
-          {clusterImage && (
-            <img
-              src={clusterImage}
-              alt={cluster.label}
-              className="h-56 w-full rounded-3xl border border-slate-200 object-cover shadow-md"
-            />
-          )}
           <div className="flex-1 space-y-4">
             <div className="flex flex-wrap items-center gap-3">
               <Badge>{modeLabel}</Badge>
@@ -262,47 +263,63 @@ export default function PathwayPlan() {
           </div>
         </Card>
 
-        <Card className="space-y-6">
-          <div>
-            <div className="text-xs font-bold uppercase tracking-widest text-slate-400">Progress tracker</div>
-            <div className="mt-3 flex items-center gap-3">
-              <div className="text-3xl font-bold text-dark">{progressPercent}%</div>
-              <div className="text-sm text-slate-500">{completedTasks} of {totalTasks} tasks complete</div>
+        <div className="space-y-6">
+          <Card className="space-y-4">
+            {clusterImage && (
+              <img
+                src={clusterImage}
+                alt={cluster.label}
+                className="h-[26rem] w-full rounded-3xl border border-slate-200 object-cover shadow-md"
+              />
+            )}
+            <div>
+              <div className="text-xs font-bold uppercase tracking-widest text-slate-400">Pathway fact</div>
+              <p className="mt-2 text-sm text-slate-600">{pathwayFact}</p>
             </div>
-            <div className="mt-4 h-3 w-full rounded-full bg-slate-100">
-              <div
-                className="h-3 rounded-full bg-primary transition-all"
-                style={{ width: `${progressPercent}%` }}
-              ></div>
-            </div>
-          </div>
+          </Card>
 
-          <div className="space-y-4">
-            {plan.tasks.map((task) => {
-              const status = progress.tasks[task.id] ?? 'not_started';
-              return (
-                <div key={task.id} className="rounded-2xl border border-slate-100 bg-slate-50/60 p-4">
-                  <div className="flex flex-wrap items-center justify-between gap-3">
-                    <div>
-                      <div className="text-sm font-semibold text-slate-700">{task.title}</div>
-                      <div className="text-xs text-slate-500 mt-1">{task.description}</div>
-                      <div className="mt-2 text-xs font-bold uppercase tracking-wider text-slate-400">
-                        {cadenceLabel(task.cadence)} focus
+          <Card className="space-y-6">
+            <div>
+              <div className="text-xs font-bold uppercase tracking-widest text-slate-400">Progress tracker</div>
+              <div className="mt-3 flex items-center gap-3">
+                <div className="text-3xl font-bold text-dark">{progressPercent}%</div>
+                <div className="text-sm text-slate-500">{completedTasks} of {totalTasks} tasks complete</div>
+              </div>
+              <div className="mt-4 h-3 w-full rounded-full bg-slate-100">
+                <div
+                  className="h-3 rounded-full bg-primary transition-all"
+                  style={{ width: `${progressPercent}%` }}
+                ></div>
+              </div>
+            </div>
+
+            <div className="space-y-4">
+              {plan.tasks.map((task) => {
+                const status = progress.tasks[task.id] ?? 'not_started';
+                return (
+                  <div key={task.id} className="rounded-2xl border border-slate-100 bg-slate-50/60 p-4">
+                    <div className="flex flex-wrap items-center justify-between gap-3">
+                      <div>
+                        <div className="text-sm font-semibold text-slate-700">{task.title}</div>
+                        <div className="text-xs text-slate-500 mt-1">{task.description}</div>
+                        <div className="mt-2 text-xs font-bold uppercase tracking-wider text-slate-400">
+                          {cadenceLabel(task.cadence)} focus
+                        </div>
                       </div>
+                      <button
+                        type="button"
+                        onClick={() => updateTaskStatus(task.id)}
+                        className={`rounded-full px-3 py-2 text-xs font-bold uppercase tracking-wider ${statusBadge(status)}`}
+                      >
+                        {status.replace('_', ' ')}
+                      </button>
                     </div>
-                    <button
-                      type="button"
-                      onClick={() => updateTaskStatus(task.id)}
-                      className={`rounded-full px-3 py-2 text-xs font-bold uppercase tracking-wider ${statusBadge(status)}`}
-                    >
-                      {status.replace('_', ' ')}
-                    </button>
                   </div>
-                </div>
-              );
-            })}
-          </div>
-        </Card>
+                );
+              })}
+            </div>
+          </Card>
+        </div>
       </div>
 
       <div className="mt-10 grid gap-6 lg:grid-cols-3">

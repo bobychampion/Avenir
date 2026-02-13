@@ -31,6 +31,8 @@ const supabase = createClient(url, key);
 
 const tables = [
   'reports',
+  'student_profiles',
+  'schools',
   'questions',
   'options',
   'traits',
