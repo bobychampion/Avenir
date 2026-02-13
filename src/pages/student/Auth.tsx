@@ -58,59 +58,80 @@ export default function StudentAuth() {
 
   return (
     <AppShell>
-      <div className="max-w-xl mx-auto">
-        <SectionTitle
-          title={mode === 'login' ? 'Student login' : 'Create your student account'}
-          subtitle="Your profile keeps your assessments and progress unique to you."
-        />
+      <div className="max-w-6xl mx-auto grid gap-8 md:grid-cols-[1fr,1fr] items-center">
+        <div>
+          <SectionTitle
+            title={mode === 'login' ? 'Student login' : 'Create your student account'}
+            subtitle="Your profile keeps your assessments and progress unique to you."
+          />
+
+          <Card className="space-y-6">
+            <div className="flex gap-3">
+              <Button
+                variant={mode === 'login' ? 'primary' : 'outline'}
+                className="!px-4 !py-2 text-xs"
+                onClick={() => setMode('login')}
+                type="button"
+              >
+                Sign in
+              </Button>
+              <Button
+                variant={mode === 'signup' ? 'primary' : 'outline'}
+                className="!px-4 !py-2 text-xs"
+                onClick={() => setMode('signup')}
+                type="button"
+              >
+                Create account
+              </Button>
+            </div>
+
+            <form className="space-y-4" onSubmit={handleSubmit}>
+              <div>
+                <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Email</label>
+                <Input
+                  type="email"
+                  placeholder="student@email.com"
+                  value={email}
+                  onChange={(event) => setEmail(event.target.value)}
+                />
+              </div>
+              <div>
+                <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Password</label>
+                <Input
+                  type="password"
+                  placeholder="••••••••"
+                  value={password}
+                  onChange={(event) => setPassword(event.target.value)}
+                />
+              </div>
+
+              {error ? <div className="text-sm text-red-500 font-semibold">{error}</div> : null}
+              {info ? <div className="text-sm text-emerald-600 font-semibold">{info}</div> : null}
+
+              <Button type="submit" disabled={loading}>
+                {loading ? 'Please wait…' : mode === 'login' ? 'Sign in' : 'Create account'}
+              </Button>
+            </form>
+          </Card>
+        </div>
 
         <Card className="space-y-6">
-          <div className="flex gap-3">
-            <Button
-              variant={mode === 'login' ? 'primary' : 'outline'}
-              className="!px-4 !py-2 text-xs"
-              onClick={() => setMode('login')}
-              type="button"
-            >
-              Sign in
-            </Button>
-            <Button
-              variant={mode === 'signup' ? 'primary' : 'outline'}
-              className="!px-4 !py-2 text-xs"
-              onClick={() => setMode('signup')}
-              type="button"
-            >
-              Create account
-            </Button>
+          <div className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400">
+            Exploring future possibilities
           </div>
-
-          <form className="space-y-4" onSubmit={handleSubmit}>
-            <div>
-              <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Email</label>
-              <Input
-                type="email"
-                placeholder="student@email.com"
-                value={email}
-                onChange={(event) => setEmail(event.target.value)}
-              />
-            </div>
-            <div>
-              <label className="text-xs font-bold uppercase tracking-widest text-slate-400">Password</label>
-              <Input
-                type="password"
-                placeholder="••••••••"
-                value={password}
-                onChange={(event) => setPassword(event.target.value)}
-              />
-            </div>
-
-            {error ? <div className="text-sm text-red-500 font-semibold">{error}</div> : null}
-            {info ? <div className="text-sm text-emerald-600 font-semibold">{info}</div> : null}
-
-            <Button type="submit" disabled={loading}>
-              {loading ? 'Please wait…' : mode === 'login' ? 'Sign in' : 'Create account'}
-            </Button>
-          </form>
+          <h2 className="text-3xl font-black text-dark">
+            Discover where your strengths can take you.
+          </h2>
+          <p className="text-slate-600">
+            Join thousands of students building a clearer roadmap for subjects, careers, and real-world skills.
+          </p>
+          <div className="rounded-3xl border border-slate-100 bg-white p-4 shadow-soft">
+            <img
+              src="/images/hero-3d-group.png"
+              alt="Students exploring future possibilities"
+              className="w-full h-[320px] object-contain"
+            />
+          </div>
         </Card>
       </div>
     </AppShell>

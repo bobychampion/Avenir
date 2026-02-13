@@ -1,5 +1,7 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { AppShell } from '../components/layout';
+import { listPartnerSchools, type PartnerSchool } from '../lib/partnerSchools';
 
 const FeatureCard = ({ title, description, to, color, delay }: { title: string, description: string, to: string, color: string, delay: string }) => (
   <Link to={to} className={`group relative overflow-hidden rounded-3xl bg-white p-8 shadow-soft transition-all duration-300 hover:-translate-y-2 hover:shadow-glow ${delay} animate-rise`}>
@@ -22,6 +24,12 @@ const FeatureCard = ({ title, description, to, color, delay }: { title: string, 
 );
 
 export default function Home() {
+  const [partners, setPartners] = useState<PartnerSchool[]>([]);
+
+  useEffect(() => {
+    listPartnerSchools().then(setPartners);
+  }, []);
+
   return (
     <AppShell>
       {/* Hero Section */}
@@ -59,9 +67,9 @@ export default function Home() {
           <div className="relative hidden md:block">
             <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-secondary/20 rounded-full blur-3xl transform translate-x-10 translate-y-10"></div>
             <img
-              src="/images/hero-3d-group.png"
-              alt="Group of diverse students representing future careers in tech, medicine, and arts"
-              className="relative z-10 w-full max-w-lg mx-auto animate-float drop-shadow-2xl"
+              src="/images/futureposiblities.png"
+              alt="Students exploring future possibilities"
+              className="relative z-10 w-full max-w-[50rem] mx-auto animate-float drop-shadow-2xl"
             />
           </div>
         </div>
@@ -125,6 +133,46 @@ export default function Home() {
             delay="animation-delay-500"
           />
         </div>
+      </div>
+
+      {/* Partner Schools */}
+      <div className="mt-16">
+        <div className="text-xs font-bold uppercase tracking-[0.3em] text-slate-400 text-center">
+          Partnering Schools
+        </div>
+        <h2 className="mt-3 text-3xl md:text-4xl font-black text-dark text-center">
+          Trusted by learning communities
+        </h2>
+        <p className="mt-3 text-center text-slate-500 max-w-2xl mx-auto">
+          We collaborate with schools and learning hubs to guide students toward the right career path.
+        </p>
+
+        {partners.length === 0 ? (
+          <div className="mt-8 text-center text-sm text-slate-400">
+            Partner schools will appear here soon.
+          </div>
+        ) : (
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
+            {partners.map((partner) => {
+              const content = (
+                <div className="flex items-center gap-3 rounded-2xl border border-slate-100 bg-white/80 p-4 shadow-soft hover:shadow-glow transition-all">
+                  <div className="h-12 w-12 rounded-xl bg-white border border-slate-200 overflow-hidden">
+                    <img src={partner.logo_url} alt={partner.name} className="h-full w-full object-contain" />
+                  </div>
+                  <div className="text-sm font-semibold text-slate-700">{partner.name}</div>
+                </div>
+              );
+
+              return partner.website_url ? (
+                <a key={partner.id} href={partner.website_url} target="_blank" rel="noreferrer">
+                  {content}
+                </a>
+              ) : (
+                <div key={partner.id}>{content}</div>
+              );
+            })}
+          </div>
+        )}
       </div>
 
     </AppShell>

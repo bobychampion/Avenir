@@ -20,6 +20,7 @@ import BranchingTool from './pages/admin/Branching';
 import PublishManager from './pages/admin/Publish';
 import ImportExport from './pages/admin/ImportExport';
 import Simulator from './pages/admin/Simulator';
+import PartnerSchoolsAdmin from './pages/admin/Partners';
 import TeacherReports from './pages/teacher/Reports';
 import ReportView from './pages/teacher/ReportView';
 import ParentAccess from './pages/parent/ParentAccess';
@@ -128,6 +129,14 @@ export default function App() {
         element={
           <RequireAdmin>
             <Simulator />
+          </RequireAdmin>
+        }
+      />
+      <Route
+        path="/admin/partners"
+        element={
+          <RequireAdmin>
+            <PartnerSchoolsAdmin />
           </RequireAdmin>
         }
       />

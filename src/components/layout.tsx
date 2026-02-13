@@ -44,10 +44,12 @@ const Navbar = () => {
       <div className={`mx-auto max-w-7xl px-6`}>
         <div className={`flex items-center justify-between rounded-full px-6 py-3 transition-all duration-300 ${scrolled ? 'glass shadow-glass' : 'bg-transparent'}`}>
           <Link to="/" className="flex items-center gap-2 group">
-            <div className="h-8 w-8 rounded-lg bg-gradient-to-br from-primary to-secondary animate-pulse-glow group-hover:scale-110 transition-transform"></div>
-            <span className="text-xl font-bold tracking-tight font-display text-dark group-hover:text-primary transition-colors">
-              Avenir
-            </span>
+            <img
+              src="/images/logo.png"
+              alt="Avenir logo"
+              className="h-32 w-32 rounded-2xl object-contain group-hover:scale-110 transition-transform"
+            />
+            <span className="sr-only">Avenir</span>
           </Link>
 
           <div className="hidden md:flex items-center gap-8">
@@ -83,8 +85,12 @@ const Footer = () => (
       <div className="grid md:grid-cols-4 gap-8">
         <div className="col-span-1 md:col-span-2">
           <div className="flex items-center gap-2 mb-4">
-            <div className="h-6 w-6 rounded-md bg-gradient-to-br from-primary to-secondary"></div>
-            <span className="text-lg font-bold font-display">Avenir</span>
+            <img
+              src="/images/logo.png"
+              alt="Avenir logo"
+              className="h-24 w-24 rounded-xl object-contain"
+            />
+            <span className="sr-only">Avenir</span>
           </div>
           <p className="text-slate-500 text-sm max-w-xs">
             Empowering the next generation to discover their potential through adaptive career assessments.
@@ -129,6 +135,7 @@ export const AdminNav = () => (
       ['Branching', '/admin/branching'],
       ['Simulator', '/admin/simulator'],
       ['Publish', '/admin/publish'],
+      ['Partners', '/admin/partners'],
       ['Import/Export', '/admin/import-export']
     ].map(([label, path]) => (
       <NavLink
